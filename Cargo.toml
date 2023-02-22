@@ -1,0 +1,11 @@
+[package]
+name = "onkostar-dev-tools"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.1", features = ["std", "help", "usage", "derive"], default-features = false }
+dialoguer = "0.10"
+console = "0.15"
+indicatif = "0.17"
+mysql = "*"

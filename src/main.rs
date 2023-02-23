@@ -21,14 +21,20 @@ fn main() {
         Commands::Datenkatalog { command } => match command {
             DkCommands::Ls { query } => {
                 datenkatalog::show_query_result(db, query);
-            },
+            }
             DkCommands::Clean { id } => {
-                let count = database::datenkatalog::Datenkatalog::clean(db, *id);
-                if count > 0 {
-                    println!("Es wurden {} Einträge entfernt!", style(count).green())
-                } else {
-                    println!("Es wurden {} Einträge entfernt!", style(count).red())
+                if let Ok(name) = database::datenkatalog::Datenkatalog::get_name(db, *id) {
+                    let count = database::datenkatalog::Datenkatalog::clean(db, *id);
+                    if count > 0 {
+                        println!(
+                            "Es wurden {} Einträge für '{}' entfernt!",
+                            style(count).green(),
+                            style(name).bold()
+                        );
+                        return
+                    }
                 }
+                println!("Es wurden keine Einträge entfernt!")
             }
         },
         Commands::Merkmalskatalog { command } => match command {

@@ -37,11 +37,17 @@ impl Datenkatalog {
         vec![]
     }
 
-    pub fn clean(db: &Database, id: u64) -> u64 {
+    pub fn get_name(db: &Database, id: u64) -> Result<String, ()> {
         if let Ok(Some(name)) = "SELECT name FROM data_catalogue WHERE id LIKE :id"
             .with(params! {"id" => id})
-            .first::<String, PooledConn>(db.connection())
-        {
+            .first::<String, PooledConn>(db.connection()) {
+            return Ok(name)
+        }
+        Err(())
+    }
+
+    pub fn clean(db: &Database, id: u64) -> u64 {
+        if let Ok(name) = Self::get_name(db, id) {
             let name_re = Regex::new(r"[[:^alpha:]]").unwrap();
             let table_name = &format!("dk_{}", name_re.replace(name.as_str(), "_").to_lowercase());
 

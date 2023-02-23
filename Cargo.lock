@@ -940,6 +940,7 @@ dependencies = [
  "dialoguer",
  "indicatif",
  "mysql",
+ "regex",
 ]
 
 [[package]]

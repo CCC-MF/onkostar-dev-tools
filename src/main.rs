@@ -20,6 +20,9 @@ fn main() {
         Commands::Datenkatalog { command } => match command {
             DkCommands::Ls { query } => {
                 datenkatalog::show_query_result(db, query);
+            },
+            DkCommands::Clean { id } => {
+                database::datenkatalog::Datenkatalog::clean(db, *id);
             }
         },
         Commands::Merkmalskatalog { command } => match command {

@@ -64,6 +64,10 @@ pub enum DkCommands {
         #[arg(short = 'q', long = "query", help = "Suchbegriff")]
         query: String,
     },
+    Clean {
+        #[arg(help = "ID des Datenkatalogs")]
+        id: u64,
+    },
 }
 
 #[derive(Clone, Subcommand)]

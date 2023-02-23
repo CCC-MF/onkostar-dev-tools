@@ -43,6 +43,10 @@ Befehle zur Recherche in Datenkatalogen.
 
 Der Befehl `onkostar-dev-tools datenkatalog ls -q <QUERY>` zeigt eine Liste von Datenkatalogen an, die die angegebene Zeichenkette beinhalten. Nach Auswahl eines Datenkatalogs werden ID, Name und Beschreibung des Datenkatalogs angezeigt.
 
+### Entfernen von Einträgen in Datenkatalogen
+
+Der Befehl `onkostar-dev-tools datenkatalog clean <ID>` entfernt alle Einträge aus einer Datenkatalogtabelle und zugehörige Einträge in der Tabelle `prozedur`.
+
 ## Merkmalskataloge
 
 Befehle zur Recherche in Merkmalskatalogen.

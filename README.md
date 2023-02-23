@@ -8,6 +8,7 @@ Grundsätzlich ist immer die Angabe der Datenbankverbindung erforderlich.
 Usage: onkostar-dev-tools [OPTIONS] --user <USERNAME> --password <PASSWORD> <COMMAND>
 
 Commands:
+  datenkatalog     Befehle für Datenkataloge
   merkmalskatalog  Befehle für Merkmalskataloge
   patient          Befehle für Patienten
   user             Befehle für Benutzer

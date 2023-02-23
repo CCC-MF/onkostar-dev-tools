@@ -35,6 +35,11 @@ pub struct Cli {
 
 #[derive(Clone, Subcommand)]
 pub enum Commands {
+    #[command(about = "Befehle für Datenkataloge")]
+    Datenkatalog {
+        #[command(subcommand)]
+        command: DkCommands,
+    },
     #[command(about = "Befehle für Merkmalskataloge")]
     Merkmalskatalog {
         #[command(subcommand)]
@@ -49,6 +54,15 @@ pub enum Commands {
     User {
         #[command(subcommand)]
         command: UserCommands,
+    },
+}
+
+#[derive(Clone, Subcommand)]
+pub enum DkCommands {
+    #[command(about = "Zeigt eine Liste von gefilterten Datenkatalogen an")]
+    Ls {
+        #[arg(short = 'q', long = "query", help = "Suchbegriff")]
+        query: String,
     },
 }
 
@@ -76,9 +90,12 @@ pub enum PatientCommands {
 pub enum UserCommands {
     #[command(about = "Neues Passwort für Onkostar festlegen")]
     Password {
-        #[arg(long = "login", help = "Loginname des Benutzers. Ändert alle Passwörter, wenn nicht angegeben.")]
+        #[arg(
+            long = "login",
+            help = "Loginname des Benutzers. Ändert alle Passwörter, wenn nicht angegeben."
+        )]
         login: Option<String>,
         #[arg(help = "Neues Passwort")]
         new_password: String,
-    }
+    },
 }

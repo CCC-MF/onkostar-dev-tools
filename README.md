@@ -35,6 +35,14 @@ Befehle zum Anpassen von Patienten
 
 * Anonymisieren von Patientendaten in Tabelle `patient`: `onkostar-dev-tools patient anonym`
 
+## Datenkataloge
+
+Befehle zur Recherche in Datenkatalogen.
+
+### Anzeige von Datenkatalogen
+
+Der Befehl `onkostar-dev-tools datenkatalog ls -q <QUERY>` zeigt eine Liste von Datenkatalogen an, die die angegebene Zeichenkette beinhalten. Nach Auswahl eines Datenkatalogs werden ID, Name und Beschreibung des Datenkatalogs angezeigt.
+
 ## Merkmalskataloge
 
 Befehle zur Recherche in Merkmalskatalogen.

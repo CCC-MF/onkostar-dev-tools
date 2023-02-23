@@ -11,11 +11,13 @@ impl User {
                 WHERE login = :login";
             let _ = db.connection().exec_drop(
                 sql,
-                params! {"login" => login, "new_password" => new_password}
+                params! {"login" => login, "new_password" => new_password},
             );
         }
 
         let sql = "UPDATE akteur SET password = SHA2(:new_password, 256)";
-        let _ = db.connection().exec_drop(sql, params! {"new_password" => new_password});
+        let _ = db
+            .connection()
+            .exec_drop(sql, params! {"new_password" => new_password});
     }
 }

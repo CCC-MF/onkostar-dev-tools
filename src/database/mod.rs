@@ -1,4 +1,5 @@
-pub mod markmalskatalog;
+pub mod datenkatalog;
+pub mod merkmalskatalog;
 pub mod patient;
 pub mod user;
 

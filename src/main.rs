@@ -9,8 +9,8 @@ use std::process::exit;
 use crate::cli::{Cli, Commands, MkCommands, PatientCommands, UserCommands};
 use crate::database::markmalskatalog::Merkmalskatalog;
 use crate::database::patient::Patient;
-use crate::database::Database;
 use crate::database::user::User;
+use crate::database::Database;
 
 mod cli;
 mod database;
@@ -21,44 +21,40 @@ fn show_query_result(db: &Database, query: &String) {
         println!("Mehr als 25 Einträge, bitte Filter weiter einschränken");
         exit(1);
     }
-    if let Ok(selection) = Select::with_theme(&ColorfulTheme::default())
+    if let Ok(Some(selection)) = Select::with_theme(&ColorfulTheme::default())
         .items(&mks)
         .default(0)
         .interact_on_opt(&Term::stderr())
     {
-        if selection.is_some() {
-            let value = mks.get(selection.unwrap()).unwrap();
-            println!(
-                "{}: \t{}\n\nSelect Version:\n",
-                style(value.id).bold(),
-                style(value.name.clone()).bold()
-            );
-            show_versions_result(db, value.id);
-        }
+        let value = mks.get(selection).unwrap();
+        println!(
+            "{}: \t{}\n\nSelect Version:\n",
+            style(value.id).bold(),
+            style(value.name.clone()).bold()
+        );
+        show_versions_result(db, value.id);
     }
 }
 
 fn show_versions_result(db: &Database, id: u128) {
     let versions = Merkmalskatalog::versions(db, id);
-    if let Ok(selection) = Select::with_theme(&ColorfulTheme::default())
+    if let Ok(Some(selection)) = Select::with_theme(&ColorfulTheme::default())
         .items(&versions)
         .default(0)
         .interact_on_opt(&Term::stderr())
     {
-        if selection.is_some() {
-            let value = versions.get(selection.unwrap()).unwrap();
-            println!("{}: \t{}\n", style(value.id).bold(), value.description);
-            Merkmalskatalog::values(&db, value.id)
-                .into_iter()
-                .for_each(|value| {
-                    println!(
-                        "{}: \t{}\n\t{}",
-                        style(value.id).bold(),
-                        style(value.name).bold(),
-                        value.beschreibung
-                    );
-                })
-        }
+        let value = versions.get(selection).unwrap();
+        println!("{}: \t{}\n", style(value.id).bold(), value.description);
+        Merkmalskatalog::values(db, value.id)
+            .into_iter()
+            .for_each(|value| {
+                println!(
+                    "{}: \t{}\n\t{}",
+                    style(value.id).bold(),
+                    style(value.name).bold(),
+                    value.beschreibung
+                );
+            })
     }
 }
 
@@ -94,10 +90,13 @@ fn main() {
                 println!("... fertig!")
             }
         },
-        Commands::User {  command } => match command {
-            UserCommands::Password { login, new_password } => {
+        Commands::User { command } => match command {
+            UserCommands::Password {
+                login,
+                new_password,
+            } => {
                 User::update_password(db, login, new_password);
             }
-        }
+        },
     }
 }

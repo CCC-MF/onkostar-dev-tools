@@ -38,7 +38,7 @@ Befehle zum Anpassen von Patienten
 
 ## Datenkataloge
 
-Befehle zur Recherche in Datenkatalogen.
+Befehle für Datenkataloge.
 
 ### Anzeige von Datenkatalogen
 
@@ -46,7 +46,7 @@ Der Befehl `onkostar-dev-tools datenkatalog ls -q <QUERY>` zeigt eine Liste von 
 
 ### Entfernen von Einträgen in Datenkatalogen
 
-Der Befehl `onkostar-dev-tools datenkatalog clean <ID>` entfernt alle Einträge aus einer Datenkatalogtabelle und zugehörige Einträge in der Tabelle `prozedur`.
+Der Befehl `onkostar-dev-tools datenkatalog clean <ID>` entfernt alle Einträge aus einer Datenkatalogtabelle und zugehörige Einträge in der Tabelle `prozedur`, sowie für Unterformulare. Die Anzahl der gelöschten Einträge wird angezeigt.
 
 ## Merkmalskataloge
 

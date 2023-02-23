@@ -1,4 +1,5 @@
 use clap::Parser;
+use console::style;
 use indicatif::ProgressBar;
 
 use crate::cli::{Cli, Commands, DkCommands, MkCommands, PatientCommands, UserCommands};
@@ -22,7 +23,12 @@ fn main() {
                 datenkatalog::show_query_result(db, query);
             },
             DkCommands::Clean { id } => {
-                database::datenkatalog::Datenkatalog::clean(db, *id);
+                let count = database::datenkatalog::Datenkatalog::clean(db, *id);
+                if count > 0 {
+                    println!("Es wurden {} Einträge entfernt!", style(count).green())
+                } else {
+                    println!("Es wurden {} Einträge entfernt!", style(count).red())
+                }
             }
         },
         Commands::Merkmalskatalog { command } => match command {

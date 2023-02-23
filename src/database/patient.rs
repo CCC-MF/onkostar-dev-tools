@@ -40,13 +40,12 @@ impl Patient {
             telefon = '', \
             telefon2 = '', \
             email = '', \
-            staatsangehoerigkeit = '', \
-            staat_id = '', \
+            staatsangehoerigkeit = NULL, \
+            staat_id = 'DE', \
             ort = 'Musterhausen', \
             postleitzahl = '12345', \
             strasse = 'Musterweg', \
             adresszusatz = '', \
-            postfix = '', \
             nachsorgepassnr = '', \
             ahvnummer = '', \
             namensvorsatz = ''\

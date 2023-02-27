@@ -116,6 +116,6 @@ pub enum UserCommands {
         )]
         login: Option<String>,
         #[arg(help = "Neues Passwort")]
-        new_password: String,
+        new_password: Option<String>,
     },
 }

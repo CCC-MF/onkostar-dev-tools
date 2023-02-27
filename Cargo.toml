@@ -1,5 +1,6 @@
 [package]
 name = "onkostar-dev-tools"
+description = "Tools zur Abfrage und Anpassung von Datenbankeinträgen in der Onkostar-Plugin-Entwicklung"
 version = "0.1.0"
 edition = "2021"
 
@@ -10,3 +11,9 @@ console = "0.15"
 indicatif = "0.17"
 mysql = "*"
 regex = "1"
+
+[profile.release]
+opt-level = "s"
+codegen-units = 1
+lto = "thin"
+strip = "debuginfo"

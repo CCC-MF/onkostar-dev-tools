@@ -10,7 +10,12 @@ pub fn show_query_result(db: &Database, query: &String) {
     if dks.len() > 50 {
         println!("Mehr als 50 Einträge, bitte Filter weiter einschränken");
         exit(1);
+    } else if dks.is_empty() {
+        println!("{}", style("Keine Einträge").yellow());
+        println!();
+        return
     }
+
     let term = Term::stdout();
 
     println!("\nDatenkatalog auswählen:");
@@ -57,7 +62,15 @@ pub fn show_forms(db: &Database, id: u64) {
 
     println!("{}", style("Formulare mit diesem Datenkatalog").green().bold());
 
-    for form in database::datenkatalog::forms(db, id) {
+    let forms = database::datenkatalog::forms(db, id);
+
+    if forms.is_empty() {
+        println!("{}", style("Keine Einträge").yellow());
+        println!();
+        return
+    }
+
+    for form in forms {
         println!("ID:           {}", form.id);
         println!("Name:         {}", form.name);
         println!("Beschreibung: {}", form.description);
@@ -78,6 +91,6 @@ pub fn show_clean_dialogue(db: &Database, id: u64) {
             return
         }
     }
-    println!("Es wurden keine Einträge entfernt!");
+    println!("{}", style("Keine Einträge").yellow());
     println!()
 }

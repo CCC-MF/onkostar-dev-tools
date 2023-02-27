@@ -10,6 +10,10 @@ pub fn show_query_result(db: &Database, query: &String) {
     if mks.len() > 50 {
         println!("Mehr als 50 Einträge, bitte Filter weiter einschränken");
         exit(1);
+    } else if mks.is_empty() {
+        println!("{}", style("Keine Einträge").yellow());
+        println!();
+        return
     }
     let term = Term::stdout();
 
@@ -49,8 +53,13 @@ pub fn show_versions_result(db: &Database, id: u128) {
         println!("Beschreibung: {}", value.description);
 
         println!("\n{}", style("Merkmale").green().bold());
-        database::merkmalskatalog::values(db, value.id)
-            .into_iter()
+        let result = database::merkmalskatalog::values(db, value.id);
+        if result.is_empty() {
+            println!("{}", style("Keine Einträge").yellow());
+            println!();
+            return
+        }
+        result.into_iter()
             .for_each(|value| {
                 println!("ID:           {}", value.id);
                 println!("Name:         {}", value.name);

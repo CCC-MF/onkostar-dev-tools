@@ -16,9 +16,12 @@ fn main() {
     let db = &Database::new(cli.username, cli.password, cli.host, cli.port, cli.dbname);
 
     match &cli.command {
-        Commands::Datenkatalog { command } => match command {
+        Commands::Datenkatalog { command } | Commands::DK {command} => match command {
             DkCommands::Ls { query } => {
                 datenkatalog::show_query_result(db, query);
+            }
+            DkCommands::Forms { id } => {
+                datenkatalog::show_forms(db, *id);
             }
             DkCommands::Clean { id } => {
                 if let Ok(name) = database::datenkatalog::get_name(db, *id) {
@@ -35,7 +38,7 @@ fn main() {
                 println!("Es wurden keine Einträge entfernt!")
             }
         },
-        Commands::Merkmalskatalog { command } => match command {
+        Commands::Merkmalskatalog { command } | Commands::MK { command }=> match command {
             MkCommands::Ls { query } => {
                 merkmalskatalog::show_query_result(db, query);
             }

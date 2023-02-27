@@ -2,6 +2,7 @@ pub mod datenkatalog;
 pub mod merkmalskatalog;
 pub mod patient;
 pub mod user;
+pub mod form;
 
 use mysql::{Pool, PooledConn};
 

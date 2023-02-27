@@ -3,6 +3,7 @@ use mysql::prelude::{BinQuery, Queryable, TextQuery, WithParams};
 use mysql::{params, PooledConn};
 use regex::Regex;
 use std::fmt::{Display, Formatter};
+use crate::database::form::{by_data_catalogue_id, FormEntity};
 
 pub struct DatenkatalogEntity {
     pub id: u64,
@@ -32,6 +33,10 @@ pub fn query(db: &Database, query: &String) -> Vec<DatenkatalogEntity> {
     }
 
     vec![]
+}
+
+pub fn forms(db: &Database, id: u64) -> Vec<FormEntity> {
+    by_data_catalogue_id(db, id)
 }
 
 pub fn get_name(db: &Database, id: u64) -> Result<String, ()> {

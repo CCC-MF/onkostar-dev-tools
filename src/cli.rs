@@ -40,8 +40,18 @@ pub enum Commands {
         #[command(subcommand)]
         command: DkCommands,
     },
+    #[command(name = "dk", about = "Befehle für Datenkataloge")]
+    DK {
+        #[command(subcommand)]
+        command: DkCommands,
+    },
     #[command(about = "Befehle für Merkmalskataloge")]
     Merkmalskatalog {
+        #[command(subcommand)]
+        command: MkCommands,
+    },
+    #[command(name = "mk", about = "Befehle für Merkmalskataloge'")]
+    MK {
         #[command(subcommand)]
         command: MkCommands,
     },
@@ -64,6 +74,12 @@ pub enum DkCommands {
         #[arg(short = 'q', long = "query", help = "Suchbegriff")]
         query: String,
     },
+    #[command(about = "Zeigt eine Liste aller Formulare, die diesen Datenkatalog nutzen")]
+    Forms {
+        #[arg(help = "ID des Datenkatalogs")]
+        id: u64,
+    },
+    #[command(about = "Entfernt alle Prozeduren, die diesen Datenkatalog nutzen")]
     Clean {
         #[arg(help = "ID des Datenkatalogs")]
         id: u64,

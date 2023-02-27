@@ -28,3 +28,17 @@ pub fn show_query_result(db: &Database, query: &String) {
         println!("Beschreibung: {}", value.description);
     }
 }
+
+pub fn show_forms(db: &Database, id: u64) {
+    let term = Term::stdout();
+    let _ = term.clear_last_lines(2);
+
+    println!("{}", style("Formulare mit diesem Datenkatalog").green().bold());
+
+    for form in database::datenkatalog::forms(db, id) {
+        println!("ID:           {}", form.id);
+        println!("Name:         {}", form.name);
+        println!("Beschreibung: {}", form.description);
+        println!()
+    }
+}

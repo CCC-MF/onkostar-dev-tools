@@ -26,6 +26,28 @@ pub fn show_query_result(db: &Database, query: &String) {
         println!("ID:           {}", value.id);
         println!("Name:         {}", value.name);
         println!("Beschreibung: {}", value.description);
+        println!();
+        println!("Nächste Aktion auswählen:");
+
+        if let Ok(Some(selection)) = Select::with_theme(&ColorfulTheme::default())
+            .items(&["Ende", "Formulare anzeigen", "Prozeduren löschen"])
+            .default(0)
+            .interact_on_opt(&term)
+        {
+            match selection {
+                1 => {
+                    println!();
+                    show_forms(db, value.id)
+                },
+                2 => {
+                    let _ = term.clear_last_lines(1);
+                    show_clean_dialogue(db, value.id)
+                },
+                _ => {
+                    let _ = term.clear_last_lines(1);
+                },
+            }
+        }
     }
 }
 
@@ -41,4 +63,21 @@ pub fn show_forms(db: &Database, id: u64) {
         println!("Beschreibung: {}", form.description);
         println!()
     }
+}
+
+pub fn show_clean_dialogue(db: &Database, id: u64) {
+    println!("{}", style("Prozeduren löschen").green().bold());
+    if let Ok(name) = database::datenkatalog::get_name(db, id) {
+        let count = database::datenkatalog::clean(db, id);
+        if count > 0 {
+            println!(
+                "Es wurden {} Einträge für '{}' entfernt!",
+                style(count).green(),
+                style(name).bold()
+            );
+            return
+        }
+    }
+    println!("Es wurden keine Einträge entfernt!");
+    println!()
 }

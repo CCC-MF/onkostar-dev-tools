@@ -1,6 +1,5 @@
-use std::io::Write;
 use clap::Parser;
-use console::Term;
+use dialoguer::{Input, Password};
 use indicatif::ProgressBar;
 
 use crate::cli::{Cli, Commands, DkCommands, MkCommands, PatientCommands, UserCommands};
@@ -13,24 +12,22 @@ mod ui;
 
 fn main() {
     let cli = Cli::parse();
-    let mut term = &Term::stdout();
 
     let db_username = match cli.username {
         Some(username) => username,
         None => {
-            let _ = term.write(b"Benutzername:  ");
-            match term.read_line() {
+            match Input::<String>::new().with_prompt("Benutzername").interact_text() {
                 Ok(username) => username,
                 _ => String::new()
             }
+
         }
     };
 
     let db_password = match cli.password {
         Some(password) => password,
         None => {
-            let _ = term.write(b"Passwort:      ");
-            match term.read_secure_line() {
+            match Password::new().with_prompt("Passwort").interact() {
                 Ok(password) => password,
                 _ => String::new()
             }

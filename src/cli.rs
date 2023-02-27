@@ -40,7 +40,7 @@ pub enum Commands {
         #[command(subcommand)]
         command: DkCommands,
     },
-    #[command(name = "dk", about = "Befehle für Datenkataloge")]
+    #[command(name = "dk", about = "Befehle für Datenkataloge (kurz)")]
     DK {
         #[command(subcommand)]
         command: DkCommands,
@@ -50,7 +50,7 @@ pub enum Commands {
         #[command(subcommand)]
         command: MkCommands,
     },
-    #[command(name = "mk", about = "Befehle für Merkmalskataloge'")]
+    #[command(name = "mk", about = "Befehle für Merkmalskataloge (kurz)")]
     MK {
         #[command(subcommand)]
         command: MkCommands,

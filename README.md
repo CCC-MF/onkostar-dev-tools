@@ -4,10 +4,16 @@ Tools zur Abfrage und Anpassung von Datenbankeinträgen in der Onkostar-Plugin-E
 
 ![Beispiel zur Nutzung](./docs/images/cast.gif)
 
-Grundsätzlich ist immer die Angabe der Datenbankverbindung erforderlich.
+Grundsätzlich ist immer die Angabe der Datenbankverbindung erforderlich. Dabei werden folgende Standardwerte verwendet:
+
+* *`host`*: `localhost`
+* *`port`*: `3306`
+* *`database`*: `onkostar`
+
+Sind Benutzername und/oder Passwort nicht als Programmargument angegeben, werden Sie abgefragt.
 
 ```
-Usage: onkostar-dev-tools [OPTIONS] --user <USERNAME> --password <PASSWORD> <COMMAND>
+Usage: onkostar-dev-tools [OPTIONS] <COMMAND>
 
 Commands:
   datenkatalog     Befehle für Datenkataloge

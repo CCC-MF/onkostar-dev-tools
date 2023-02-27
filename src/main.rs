@@ -1,4 +1,6 @@
+use std::io::Write;
 use clap::Parser;
+use console::Term;
 use indicatif::ProgressBar;
 
 use crate::cli::{Cli, Commands, DkCommands, MkCommands, PatientCommands, UserCommands};
@@ -11,8 +13,31 @@ mod ui;
 
 fn main() {
     let cli = Cli::parse();
+    let mut term = &Term::stdout();
 
-    let db = &Database::new(cli.username, cli.password, cli.host, cli.port, cli.dbname);
+    let db_username = match cli.username {
+        Some(username) => username,
+        None => {
+            let _ = term.write(b"Benutzername:  ");
+            match term.read_line() {
+                Ok(username) => username,
+                _ => String::new()
+            }
+        }
+    };
+
+    let db_password = match cli.password {
+        Some(password) => password,
+        None => {
+            let _ = term.write(b"Passwort:      ");
+            match term.read_secure_line() {
+                Ok(password) => password,
+                _ => String::new()
+            }
+        }
+    };
+
+    let db = &Database::new(db_username, db_password, cli.host, cli.port, cli.dbname);
 
     match &cli.command {
         Commands::Datenkatalog { command } | Commands::DK {command} => match command {

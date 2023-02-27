@@ -7,9 +7,9 @@ pub struct Cli {
     #[command(subcommand)]
     pub command: Commands,
     #[arg(short = 'U', long = "user", help = "Benutzername für Datenbankzugriff")]
-    pub username: String,
+    pub username: Option<String>,
     #[arg(long = "password", help = "Passwort für Datenbankzugriff")]
-    pub password: String,
+    pub password: Option<String>,
     #[arg(
         short = 'H',
         long = "host",

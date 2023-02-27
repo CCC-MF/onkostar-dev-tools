@@ -13,7 +13,7 @@ pub fn show_query_result(db: &Database, query: &String) {
     }
     let term = Term::stdout();
 
-    println!("\nSelect Entry:");
+    println!("\nDatenkatalog auswählen:");
 
     if let Ok(Some(selection)) = Select::with_theme(&ColorfulTheme::default())
         .items(&dks)

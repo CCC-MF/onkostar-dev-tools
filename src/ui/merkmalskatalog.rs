@@ -13,7 +13,7 @@ pub fn show_query_result(db: &Database, query: &String) {
     }
     let term = Term::stdout();
 
-    println!("\nSelect Entry:");
+    println!("\nMerkmalskatalog auswählen:");
 
     if let Ok(Some(selection)) = Select::with_theme(&ColorfulTheme::default())
         .items(&mks)
@@ -34,7 +34,7 @@ pub fn show_versions_result(db: &Database, id: u128) {
 
     let term = Term::stdout();
 
-    println!("\nSelect Version:");
+    println!("\nVersion auswählen:");
 
     if let Ok(Some(selection)) = Select::with_theme(&ColorfulTheme::default())
         .items(&versions)

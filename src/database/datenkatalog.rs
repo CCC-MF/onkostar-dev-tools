@@ -16,54 +16,53 @@ impl Display for DatenkatalogEntity {
     }
 }
 
-pub struct Datenkatalog;
+pub fn query(db: &Database, query: &String) -> Vec<DatenkatalogEntity> {
+    let sql = "SELECT id, name, description FROM data_catalogue WHERE name LIKE :name";
 
-impl Datenkatalog {
-    pub fn query(db: &Database, query: &String) -> Vec<DatenkatalogEntity> {
-        let sql = "SELECT id, name, description FROM data_catalogue WHERE name LIKE :name";
-
-        if let Ok(result) = db.connection().exec_map(
-            sql,
-            params! {"name" => format!("{query}%")},
-            |(id, name, description)| DatenkatalogEntity {
-                id,
-                name,
-                description,
-            },
-        ) {
-            return result;
-        }
-
-        vec![]
+    if let Ok(result) = db.connection().exec_map(
+        sql,
+        params! {"name" => format!("{query}%")},
+        |(id, name, description)| DatenkatalogEntity {
+            id,
+            name,
+            description,
+        },
+    ) {
+        return result;
     }
 
-    pub fn get_name(db: &Database, id: u64) -> Result<String, ()> {
-        if let Ok(Some(name)) = "SELECT name FROM data_catalogue WHERE id LIKE :id"
-            .with(params! {"id" => id})
-            .first::<String, PooledConn>(db.connection()) {
-            return Ok(name)
-        }
-        Err(())
+    vec![]
+}
+
+pub fn get_name(db: &Database, id: u64) -> Result<String, ()> {
+    if let Ok(Some(name)) = "SELECT name FROM data_catalogue WHERE id LIKE :id"
+        .with(params! {"id" => id})
+        .first::<String, PooledConn>(db.connection())
+    {
+        return Ok(name);
     }
+    Err(())
+}
 
-    pub fn clean(db: &Database, id: u64) -> u64 {
-        if let Ok(name) = Self::get_name(db, id) {
-            let name_re = Regex::new(r"[[:^alpha:]]").unwrap();
-            let table_name = &format!("dk_{}", name_re.replace(name.as_str(), "_").to_lowercase());
+pub fn clean(db: &Database, id: u64) -> u64 {
+    if let Ok(name) = get_name(db, id) {
+        let name_re = Regex::new(r"[[:^alpha:]]").unwrap();
+        let table_name = &format!("dk_{}", name_re.replace(name.as_str(), "_").to_lowercase());
 
-            if let Ok(Some(count)) = format!("SELECT COUNT(*) FROM {}", table_name).first(db.connection()) {
-                if format!(
-                    "DELETE FROM prozedur WHERE id IN (SELECT id FROM {}); DELETE FROM {}",
-                    table_name, table_name
-                )
-                .run(db.connection())
-                .is_ok()
-                {
-                    return count;
-                }
+        if let Ok(Some(count)) =
+            format!("SELECT COUNT(*) FROM {}", table_name).first(db.connection())
+        {
+            if format!(
+                "DELETE FROM prozedur WHERE id IN (SELECT id FROM {}); DELETE FROM {}",
+                table_name, table_name
+            )
+            .run(db.connection())
+            .is_ok()
+            {
+                return count;
             }
-        };
+        }
+    };
 
-        0
-    }
+    0
 }

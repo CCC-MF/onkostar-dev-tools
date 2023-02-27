@@ -6,7 +6,7 @@ use dialoguer::Select;
 use std::process::exit;
 
 pub fn show_query_result(db: &Database, query: &String) {
-    let dks = database::datenkatalog::Datenkatalog::query(db, query);
+    let dks = database::datenkatalog::query(db, query);
     if dks.len() > 50 {
         println!("Mehr als 50 Einträge, bitte Filter weiter einschränken");
         exit(1);

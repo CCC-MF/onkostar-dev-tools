@@ -6,7 +6,7 @@ use dialoguer::Select;
 use std::process::exit;
 
 pub fn show_query_result(db: &Database, query: &String) {
-    let mks = database::merkmalskatalog::Merkmalskatalog::query(db, query);
+    let mks = database::merkmalskatalog::query(db, query);
     if mks.len() > 50 {
         println!("Mehr als 50 Einträge, bitte Filter weiter einschränken");
         exit(1);
@@ -30,7 +30,7 @@ pub fn show_query_result(db: &Database, query: &String) {
 }
 
 pub fn show_versions_result(db: &Database, id: u128) {
-    let versions = database::merkmalskatalog::Merkmalskatalog::versions(db, id);
+    let versions = database::merkmalskatalog::versions(db, id);
 
     let term = Term::stdout();
 
@@ -49,7 +49,7 @@ pub fn show_versions_result(db: &Database, id: u128) {
         println!("Beschreibung: {}", value.description);
 
         println!("\n{}", style("Merkmale").green().bold());
-        database::merkmalskatalog::Merkmalskatalog::values(db, value.id)
+        database::merkmalskatalog::values(db, value.id)
             .into_iter()
             .for_each(|value| {
                 println!("ID:           {}", value.id);

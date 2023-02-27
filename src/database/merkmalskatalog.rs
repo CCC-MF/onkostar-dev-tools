@@ -35,60 +35,56 @@ pub struct MerkmalskatalogCategoryEntity {
     pub beschreibung: String,
 }
 
-pub struct Merkmalskatalog;
-
-impl Merkmalskatalog {
-    pub fn query(db: &Database, query: &String) -> Vec<MerkmalskatalogEntity> {
-        let sql = "SELECT id, name FROM property_catalogue \
+pub fn query(db: &Database, query: &String) -> Vec<MerkmalskatalogEntity> {
+    let sql = "SELECT id, name FROM property_catalogue \
             WHERE LOWER(name) LIKE :name ORDER BY id";
 
-        if let Ok(result) = db.connection().exec_map(
-            sql,
-            params! {"name" => format!("%{query}%")},
-            |(id, name)| MerkmalskatalogEntity { id, name },
-        ) {
-            return result;
-        };
+    if let Ok(result) = db.connection().exec_map(
+        sql,
+        params! {"name" => format!("%{query}%")},
+        |(id, name)| MerkmalskatalogEntity { id, name },
+    ) {
+        return result;
+    };
 
-        vec![]
-    }
+    vec![]
+}
 
-    pub fn versions(db: &Database, id: u128) -> Vec<MerkmalskatalogVersionEntity> {
-        let sql = "SELECT id, version_number, description FROM property_catalogue_version \
+pub fn versions(db: &Database, id: u128) -> Vec<MerkmalskatalogVersionEntity> {
+    let sql = "SELECT id, version_number, description FROM property_catalogue_version \
             WHERE datacatalog_id = :id ORDER BY id";
 
-        if let Ok(result) =
-            db.connection()
-                .exec_map(sql, params! {"id" => id}, |(id, version, description)| {
-                    MerkmalskatalogVersionEntity {
-                        id,
-                        version,
-                        description,
-                    }
-                })
-        {
-            return result;
-        };
+    if let Ok(result) =
+        db.connection()
+            .exec_map(sql, params! {"id" => id}, |(id, version, description)| {
+                MerkmalskatalogVersionEntity {
+                    id,
+                    version,
+                    description,
+                }
+            })
+    {
+        return result;
+    };
 
-        vec![]
-    }
+    vec![]
+}
 
-    pub fn values(db: &Database, version_id: u128) -> Vec<MerkmalskatalogCategoryEntity> {
-        let sql = "SELECT id, name, beschreibung FROM property_catalogue_category \
+pub fn values(db: &Database, version_id: u128) -> Vec<MerkmalskatalogCategoryEntity> {
+    let sql = "SELECT id, name, beschreibung FROM property_catalogue_category \
             WHERE version_id = :id ORDER BY id";
 
-        if let Ok(result) = db.connection().exec_map(
-            sql,
-            params! {"id" => version_id},
-            |(id, name, beschreibung)| MerkmalskatalogCategoryEntity {
-                id,
-                name,
-                beschreibung,
-            },
-        ) {
-            return result;
-        };
+    if let Ok(result) = db.connection().exec_map(
+        sql,
+        params! {"id" => version_id},
+        |(id, name, beschreibung)| MerkmalskatalogCategoryEntity {
+            id,
+            name,
+            beschreibung,
+        },
+    ) {
+        return result;
+    };
 
-        vec![]
-    }
+    vec![]
 }

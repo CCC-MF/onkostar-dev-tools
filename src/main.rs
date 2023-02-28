@@ -41,6 +41,7 @@ fn main() {
             FormCommands::Ls { query } => {
                 form::show_query_result(db, query);
             }
+            FormCommands::DK { id } => form::show_data_catalogues(db, *id),
         },
         Commands::Merkmalskatalog { command } | Commands::MK { command } => match command {
             MkCommands::Ls { query } => {

@@ -75,6 +75,10 @@ Der Befehl `onkostar-dev-tools form ls -q <QUERY>` zeigt eine Liste von Formular
 
 Der Befehl `onkostar-dev-tools form dk <ID>` zeigt eine Liste von Datenkatalogen an, die im angegebenen Formular verwendet werden.
 
+### Entfernen von Einträgen in Datenkatalogen dieses Formulars
+
+Der Befehl `onkostar-dev-tools form clean <ID>` entfernt alle Einträge aus zum Formular gehörenden Datenkatalogtabellen und zugehörige Einträge in der Tabelle `prozedur`, sowie für Unterformulare. Die Anzahl der gelöschten Einträge wird angezeigt.
+
 ## Merkmalskataloge
 
 Befehle zur Recherche in Merkmalskatalogen.

@@ -12,11 +12,7 @@ pub struct MerkmalskatalogEntity {
 
 impl Display for MerkmalskatalogEntity {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(
-            f,
-            "ID:           {}\nName:         {}",
-            self.id, self.name
-        )
+        writeln!(f, "ID:           {}\nName:         {}", self.id, self.name)
     }
 }
 

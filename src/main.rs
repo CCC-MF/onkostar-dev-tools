@@ -60,11 +60,10 @@ fn main() {
             } => match new_password {
                 Some(password) => database::user::update_password(db, login, password),
                 None => {
-                    let msg = match login {
+                    green_headline!(match login {
                         Some(login) => format!("Neues Passwort für Benutzer '{}' setzen", login),
                         None => "Neues Passwort für alle Benutzer setzen".to_string(),
-                    };
-                    println!("{}", style(msg).green().bold());
+                    });
                     if let Ok(password) = Password::new()
                         .with_prompt("Neues Passwort")
                         .with_confirmation("Wiederholung", "Passwörter nicht identisch")

@@ -78,3 +78,31 @@ pub fn db_login(username: Option<String>, password: Option<String>) -> (String, 
 
     (db_username, db_password)
 }
+
+#[macro_export]
+macro_rules! success {
+    ($str:expr) => {
+        println!("{}", style($str).green())
+    };
+}
+
+#[macro_export]
+macro_rules! warn {
+    ($str:expr) => {
+        println!("{}", style($str).yellow())
+    };
+}
+
+#[macro_export]
+macro_rules! green_headline {
+    ($str:expr) => {
+        println!("{}", style($str).green().bold())
+    };
+}
+
+#[macro_export]
+macro_rules! headline {
+    ($str:expr) => {
+        println!("{}", style($str).bold())
+    };
+}

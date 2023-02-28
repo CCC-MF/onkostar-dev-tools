@@ -1,6 +1,6 @@
 use clap::Parser;
 use console::style;
-use dialoguer::{Input, Password};
+use dialoguer::Password;
 use indicatif::ProgressBar;
 
 use crate::cli::{Cli, Commands, DkCommands, MkCommands, PatientCommands, UserCommands};
@@ -14,24 +14,7 @@ mod ui;
 fn main() {
     let cli = Cli::parse();
 
-    let db_username = match cli.username {
-        Some(username) => username,
-        None => match Input::<String>::new()
-            .with_prompt("Benutzername")
-            .interact_text()
-        {
-            Ok(username) => username,
-            _ => String::new(),
-        },
-    };
-
-    let db_password = match cli.password {
-        Some(password) => password,
-        None => match Password::new().with_prompt("Passwort").interact() {
-            Ok(password) => password,
-            _ => String::new(),
-        },
-    };
+    let (db_username, db_password) = db_login(cli.username, cli.password);
 
     let db = &Database::new(db_username, db_password, cli.host, cli.port, cli.dbname);
 

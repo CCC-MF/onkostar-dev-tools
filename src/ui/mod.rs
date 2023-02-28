@@ -1,6 +1,6 @@
 use console::{style, Term};
 use dialoguer::theme::ColorfulTheme;
-use dialoguer::Select;
+use dialoguer::{Input, Password, Select};
 use std::io::Error;
 
 pub mod datenkatalog;
@@ -44,4 +44,37 @@ impl EntitySelect {
             .default(0)
             .interact_on_opt(term)
     }
+}
+
+pub fn db_login(username: Option<String>, password: Option<String>) -> (String, String) {
+    let term = Term::stdout();
+
+    let db_username = match username {
+        Some(username) => username,
+        None => {
+            let value = match Input::<String>::new()
+                .with_prompt("DB Benutzername")
+                .interact_text()
+            {
+                Ok(username) => username,
+                _ => String::new(),
+            };
+            let _ = term.clear_last_lines(1);
+            value
+        }
+    };
+
+    let db_password = match password {
+        Some(password) => password,
+        None => {
+            let value = match Password::new().with_prompt("DB Passwort").interact() {
+                Ok(password) => password,
+                _ => String::new(),
+            };
+            let _ = term.clear_last_lines(1);
+            value
+        }
+    };
+
+    (db_username, db_password)
 }

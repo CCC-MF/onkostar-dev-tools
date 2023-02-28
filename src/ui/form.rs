@@ -27,12 +27,18 @@ pub fn show_query_result(db: &Database, query: &String) {
         println!("{}", value);
         headline!("Nächste Aktion auswählen");
 
+        let mut items = vec![
+            "Ende",
+            "Verwendete Datenkataloge anzeigen",
+            "Alle Prozeduren löschen",
+        ];
+
+        if !database::form::subforms(db, value.id).is_empty() {
+            items.push("Unterformulare anzeigen")
+        }
+
         if let Ok(Some(selection)) = Select::with_theme(&CustomTheme::default())
-            .items(&[
-                "Ende",
-                "Verwendete Datenkataloge anzeigen",
-                "Alle Prozeduren löschen",
-            ])
+            .items(&items)
             .default(0)
             .interact_on_opt(&term)
         {
@@ -42,11 +48,31 @@ pub fn show_query_result(db: &Database, query: &String) {
                     let _ = term.clear_last_lines(1);
                     show_clean_dialogue(db, value.id)
                 }
+                3 => show_subforms(db, value.id),
                 _ => {
                     let _ = term.clear_last_lines(1);
                 }
             }
         }
+    }
+}
+
+pub fn show_subforms(db: &Database, id: u64) {
+    let term = Term::stdout();
+    let _ = term.clear_last_lines(1);
+
+    green_headline!("Unterformulare dieses Formulars");
+
+    let forms = database::form::subforms(db, id);
+
+    if forms.is_empty() {
+        warn!("Keine Einträge");
+        println!();
+        return;
+    }
+
+    for form in forms {
+        println!("{}", form);
     }
 }
 

@@ -98,6 +98,11 @@ pub enum FormCommands {
         #[arg(short = 'q', long = "query", help = "Suchbegriff")]
         query: String,
     },
+    #[command(about = "Zeigt die Unterformulare von Formularen an")]
+    UF {
+        #[arg(help = "ID des Formulars")]
+        id: u64,
+    },
     #[command(about = "Zeigt die Datenkataloge, die von diesem Formular genutzt werden")]
     DK {
         #[arg(help = "ID des Formulars")]

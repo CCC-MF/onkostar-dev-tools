@@ -41,6 +41,7 @@ fn main() {
             FormCommands::Ls { query } => {
                 form::show_query_result(db, query);
             }
+            FormCommands::UF { id } => form::show_subforms(db, *id),
             FormCommands::DK { id } => form::show_data_catalogues(db, *id),
             FormCommands::Clean { id } => form::show_clean_dialogue(db, *id),
         },

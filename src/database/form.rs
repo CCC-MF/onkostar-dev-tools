@@ -68,6 +68,27 @@ pub fn by_data_catalogue_id(db: &Database, id: u64) -> Vec<FormEntity> {
     vec![]
 }
 
+pub fn subforms(db: &Database, id: u64) -> Vec<FormEntity> {
+    let sql = "SELECT sub.id, sub.name, sub.description FROM data_form_entry dfe \
+        JOIN data_form sub on dfe.referenced_data_form = sub.id \
+        WHERE dfe.data_form_id = :id and dfe.type = 'subform' ORDER BY sub.id";
+
+    if let Ok(result) =
+        db.connection()
+            .exec_map(sql, params! {"id" => id}, |(id, name, description)| {
+                FormEntity {
+                    id,
+                    name,
+                    description,
+                }
+            })
+    {
+        return result;
+    }
+
+    vec![]
+}
+
 pub fn data_catalogues(db: &Database, id: u64) -> Vec<DatenkatalogEntity> {
     by_data_form_id(db, id)
 }

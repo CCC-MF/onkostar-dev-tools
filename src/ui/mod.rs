@@ -4,6 +4,7 @@ use dialoguer::{Input, Password, Select};
 use std::io::Error;
 
 pub mod datenkatalog;
+pub mod form;
 pub mod merkmalskatalog;
 
 pub struct CustomTheme;

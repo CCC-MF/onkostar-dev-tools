@@ -1,4 +1,6 @@
+use crate::database::datenkatalog::{by_data_form_id, DatenkatalogEntity};
 use crate::database::Database;
+use crate::ui::SelectDisplay;
 use mysql::params;
 use mysql::prelude::Queryable;
 use std::fmt::{Display, Formatter};
@@ -19,8 +21,33 @@ impl Display for FormEntity {
     }
 }
 
+impl SelectDisplay for FormEntity {
+    fn to_string(&self) -> String {
+        format!("{}: {}", self.id, self.name)
+    }
+}
+
+pub fn query(db: &Database, query: &String) -> Vec<FormEntity> {
+    let sql = "SELECT id, name, description FROM data_form \
+        WHERE name LIKE :name";
+
+    if let Ok(result) = db.connection().exec_map(
+        sql,
+        params! {"name" => format!("{query}%")},
+        |(id, name, description)| FormEntity {
+            id,
+            name,
+            description,
+        },
+    ) {
+        return result;
+    }
+
+    vec![]
+}
+
 pub fn by_data_catalogue_id(db: &Database, id: u64) -> Vec<FormEntity> {
-    let sql = "SELECT df.id, df.name, df.description from data_form_data_catalogue dc \
+    let sql = "SELECT df.id, df.name, df.description FROM data_form_data_catalogue dc \
         JOIN data_form df ON dc.data_form_id = df.id \
         WHERE dc.data_catalogue_id = :id \
         ORDER BY df.id";
@@ -39,4 +66,8 @@ pub fn by_data_catalogue_id(db: &Database, id: u64) -> Vec<FormEntity> {
     }
 
     vec![]
+}
+
+pub fn data_catalogues(db: &Database, id: u64) -> Vec<DatenkatalogEntity> {
+    by_data_form_id(db, id)
 }

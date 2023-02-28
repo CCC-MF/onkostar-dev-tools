@@ -18,6 +18,7 @@ Usage: onkostar-dev-tools [OPTIONS] <COMMAND>
 Commands:
   datenkatalog     Befehle für Datenkataloge
   dk               Befehle für Datenkataloge (kurz)
+  form             Befehle für Formulare
   merkmalskatalog  Befehle für Merkmalskataloge
   mk               Befehle für Merkmalskataloge (kurz)
   patient          Befehle für Patienten
@@ -52,7 +53,7 @@ Befehle für Datenkataloge.
 
 ### Anzeige von Datenkatalogen
 
-Der Befehl `onkostar-dev-tools datenkatalog ls -q <QUERY>` zeigt eine Liste von Datenkatalogen an, die die angegebene Zeichenkette beinhalten. Nach Auswahl eines Datenkatalogs werden ID, Name und Beschreibung des Datenkatalogs angezeigt.
+Der Befehl `onkostar-dev-tools datenkatalog ls -q <QUERY>` zeigt eine Liste von Datenkatalogen an, die die angegebene Zeichenkette beinhalten. Nach Auswahl eines Datenkatalogs werden ID, Name und Beschreibung des Datenkatalogs angezeigt. Danach sind interaktiv weitere Aktionen möglich.
 
 ### Anzeige von Formularen die einen Datenkatalog verwenden
 
@@ -61,6 +62,10 @@ Der Befehl `onkostar-dev-tools datenkatalog forms <ID>` zeigt eine Liste von For
 ### Entfernen von Einträgen in Datenkatalogen
 
 Der Befehl `onkostar-dev-tools datenkatalog clean <ID>` entfernt alle Einträge aus einer Datenkatalogtabelle und zugehörige Einträge in der Tabelle `prozedur`, sowie für Unterformulare. Die Anzahl der gelöschten Einträge wird angezeigt.
+
+## Formulare
+
+Der Befehl `onkostar-dev-tools form ls -q <QUERY>` zeigt eine Liste von Formularen an, die die angegebene Zeichenkette beinhalten. Nach Auswahl eines Formulars werden ID, Name und Beschreibung des Formulars angezeigt. Danach sind interaktiv weitere Aktionen möglich.
 
 ## Merkmalskataloge
 

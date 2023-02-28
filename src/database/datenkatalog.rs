@@ -50,6 +50,28 @@ pub fn forms(db: &Database, id: u64) -> Vec<FormEntity> {
     by_data_catalogue_id(db, id)
 }
 
+pub fn by_data_form_id(db: &Database, id: u64) -> Vec<DatenkatalogEntity> {
+    let sql = "SELECT dc.id, dc.name, dc.description FROM data_catalogue dc \
+        JOIN data_form_data_catalogue dfdc ON dc.id = dfdc.data_catalogue_id \
+        WHERE dfdc.data_form_id= :id \
+        ORDER BY dc.id";
+
+    if let Ok(result) =
+        db.connection()
+            .exec_map(sql, params! {"id" => id}, |(id, name, description)| {
+                DatenkatalogEntity {
+                    id,
+                    name,
+                    description,
+                }
+            })
+    {
+        return result;
+    }
+
+    vec![]
+}
+
 pub fn get_name(db: &Database, id: u64) -> Result<String, ()> {
     if let Ok(Some(name)) = "SELECT name FROM data_catalogue WHERE id LIKE :id"
         .with(params! {"id" => id})

@@ -45,6 +45,11 @@ pub enum Commands {
         #[command(subcommand)]
         command: DkCommands,
     },
+    #[command(about = "Befehle für Formulare")]
+    Form {
+        #[command(subcommand)]
+        command: FormCommands,
+    },
     #[command(about = "Befehle für Merkmalskataloge")]
     Merkmalskatalog {
         #[command(subcommand)]
@@ -83,6 +88,15 @@ pub enum DkCommands {
     Clean {
         #[arg(help = "ID des Datenkatalogs")]
         id: u64,
+    },
+}
+
+#[derive(Clone, Subcommand)]
+pub enum FormCommands {
+    #[command(about = "Zeigt eine Liste von gefilterten Formularen an")]
+    Ls {
+        #[arg(short = 'q', long = "query", help = "Suchbegriff")]
+        query: String,
     },
 }
 

@@ -3,7 +3,9 @@ use dialoguer::Password;
 use indicatif::ProgressBar;
 use std::process::exit;
 
-use crate::cli::{Cli, Commands, DkCommands, MkCommands, PatientCommands, UserCommands};
+use crate::cli::{
+    Cli, Commands, DkCommands, FormCommands, MkCommands, PatientCommands, UserCommands,
+};
 use crate::database::Database;
 use crate::ui::*;
 
@@ -34,6 +36,11 @@ fn main() {
                 datenkatalog::show_forms(db, *id);
             }
             DkCommands::Clean { id } => datenkatalog::show_clean_dialogue(db, *id),
+        },
+        Commands::Form { command } => match command {
+            FormCommands::Ls { query } => {
+                form::show_query_result(db, query);
+            }
         },
         Commands::Merkmalskatalog { command } | Commands::MK { command } => match command {
             MkCommands::Ls { query } => {

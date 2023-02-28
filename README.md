@@ -53,7 +53,11 @@ Befehle für Datenkataloge.
 
 ### Anzeige von Datenkatalogen
 
+Die beiden Unterbefehle `datenkatalog` und `dk` sind identisch.
+
 Der Befehl `onkostar-dev-tools datenkatalog ls -q <QUERY>` zeigt eine Liste von Datenkatalogen an, die die angegebene Zeichenkette beinhalten. Nach Auswahl eines Datenkatalogs werden ID, Name und Beschreibung des Datenkatalogs angezeigt. Danach sind interaktiv weitere Aktionen möglich.
+
+Mit dem Befehl `onkostar-dev-tools dk show <ID>` wird ein einzelner Eintrag angezeigt.
 
 ### Anzeige von Formularen die einen Datenkatalog verwenden
 
@@ -70,6 +74,8 @@ Befehle für Formulare
 ### Anzeige von Formularen
 
 Der Befehl `onkostar-dev-tools form ls -q <QUERY>` zeigt eine Liste von Formularen an, die die angegebene Zeichenkette beinhalten. Nach Auswahl eines Formulars werden ID, Name und Beschreibung des Formulars angezeigt. Danach sind interaktiv weitere Aktionen möglich.
+
+Mit dem Befehl `onkostar-dev-tools form show <ID>` wird ein einzelner Eintrag angezeigt.
 
 ### Anzeige von Unterformularen
 
@@ -89,7 +95,11 @@ Befehle zur Recherche in Merkmalskatalogen.
 
 ### Anzeige von Merkmalskatalogen
 
+Die beiden Unterbefehle `merkmalskatalog` und `mk` sind identisch.
+
 Der Befehl `onkostar-dev-tools merkmalskatalog ls -q <QUERY>` zeigt eine Liste von Merkmalskatalogen an, die die angegebene Zeichenkette beinhalten. Nach Auswahl eines Merkmalkatalogs kann eine vorhandene Version interaktiv ausgewählt werden und letztendlich vorhandene Inhalte angezeigt werden.
+
+Mit dem Befehl `onkostar-dev-tools mk show <ID>` wird ein einzelner Eintrag angezeigt.
 
 ### Anzeige einer Version eines Merkmalskatalogs
 

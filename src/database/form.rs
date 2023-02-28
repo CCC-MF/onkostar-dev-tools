@@ -1,8 +1,8 @@
 use crate::database::datenkatalog::{by_data_form_id, DatenkatalogEntity};
 use crate::database::Database;
 use crate::ui::SelectDisplay;
-use mysql::params;
-use mysql::prelude::Queryable;
+use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
+use mysql::{params, FromRowError, PooledConn, Row};
 use std::fmt::{Display, Formatter};
 
 pub struct FormEntity {
@@ -18,6 +18,23 @@ impl Display for FormEntity {
             "ID:           {}\nName:         {}\nBeschreibung: {}",
             self.id, self.name, self.description
         )
+    }
+}
+
+impl FromRow for FormEntity {
+    fn from_row_opt(row: Row) -> Result<Self, FromRowError>
+    where
+        Self: Sized,
+    {
+        if row.is_empty() {
+            return Err(FromRowError(row));
+        }
+
+        Ok(FormEntity {
+            id: row.get(0).unwrap(),
+            name: row.get(1).unwrap(),
+            description: row.get(2).unwrap(),
+        })
     }
 }
 
@@ -44,6 +61,17 @@ pub fn query(db: &Database, query: &String) -> Vec<FormEntity> {
     }
 
     vec![]
+}
+
+pub fn get_by_id(db: &Database, id: u64) -> Option<FormEntity> {
+    if let Ok(Some(result)) = "SELECT id, name, description FROM data_form WHERE id = :id"
+        .with(params! {"id" => id})
+        .first::<FormEntity, PooledConn>(db.connection())
+    {
+        Some(result)
+    } else {
+        None
+    }
 }
 
 pub fn by_data_catalogue_id(db: &Database, id: u64) -> Vec<FormEntity> {

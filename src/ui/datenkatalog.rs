@@ -46,6 +46,17 @@ pub fn show_query_result(db: &Database, query: &String) {
     }
 }
 
+pub fn show(db: &Database, id: u64) {
+    if let Some(dk) = database::datenkatalog::get_by_id(db, id) {
+        green_headline!("Datenkatalog");
+        println!("{}", dk);
+        return;
+    }
+
+    warn!("Nicht gefunden");
+    println!();
+}
+
 pub fn show_forms(db: &Database, id: u64) {
     let term = Term::stdout();
     let _ = term.clear_last_lines(1);

@@ -27,7 +27,18 @@ pub fn show_query_result(db: &Database, query: &String) {
     }
 }
 
-pub fn show_versions_result(db: &Database, id: u128) {
+pub fn show(db: &Database, id: u64) {
+    if let Some(mk) = database::merkmalskatalog::get_by_id(db, id) {
+        green_headline!("Merkmalskatalog");
+        println!("{}", mk);
+        return;
+    }
+
+    warn!("Nicht gefunden");
+    println!();
+}
+
+pub fn show_versions_result(db: &Database, id: u64) {
     let versions = database::merkmalskatalog::versions(db, id);
 
     let term = Term::stdout();

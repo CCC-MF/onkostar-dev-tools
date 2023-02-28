@@ -79,6 +79,11 @@ pub enum DkCommands {
         #[arg(short = 'q', long = "query", help = "Suchbegriff")]
         query: String,
     },
+    #[command(about = "Zeigt einen Datenkatalog an")]
+    Show {
+        #[arg(help = "ID des Datenkatalogs")]
+        id: u64,
+    },
     #[command(about = "Zeigt eine Liste aller Formulare, die diesen Datenkatalog nutzen")]
     Forms {
         #[arg(help = "ID des Datenkatalogs")]
@@ -97,6 +102,11 @@ pub enum FormCommands {
     Ls {
         #[arg(short = 'q', long = "query", help = "Suchbegriff")]
         query: String,
+    },
+    #[command(about = "Zeigt ein Formular an")]
+    Show {
+        #[arg(help = "ID des Formulars")]
+        id: u64,
     },
     #[command(about = "Zeigt die Unterformulare von Formularen an")]
     UF {
@@ -122,10 +132,15 @@ pub enum MkCommands {
         #[arg(short = 'q', long = "query", help = "Suchbegriff")]
         query: String,
     },
+    #[command(about = "Zeigt einen Merkmalskatalog an")]
+    Show {
+        #[arg(help = "ID des Merkmalskatalogs")]
+        id: u64,
+    },
     #[command(about = "Zeigt eine Versionen eines Merkmalskataloges an")]
     Versions {
         #[arg(help = "ID des Merkmalskatalogs")]
-        id: u128,
+        id: u64,
     },
 }
 

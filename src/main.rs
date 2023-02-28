@@ -32,6 +32,9 @@ fn main() {
             DkCommands::Ls { query } => {
                 datenkatalog::show_query_result(db, query);
             }
+            DkCommands::Show { id } => {
+                datenkatalog::show(db, *id);
+            }
             DkCommands::Forms { id } => {
                 datenkatalog::show_forms(db, *id);
             }
@@ -41,6 +44,9 @@ fn main() {
             FormCommands::Ls { query } => {
                 form::show_query_result(db, query);
             }
+            FormCommands::Show { id } => {
+                form::show(db, *id);
+            }
             FormCommands::UF { id } => form::show_subforms(db, *id),
             FormCommands::DK { id } => form::show_data_catalogues(db, *id),
             FormCommands::Clean { id } => form::show_clean_dialogue(db, *id),
@@ -48,6 +54,9 @@ fn main() {
         Commands::Merkmalskatalog { command } | Commands::MK { command } => match command {
             MkCommands::Ls { query } => {
                 merkmalskatalog::show_query_result(db, query);
+            }
+            MkCommands::Show { id } => {
+                merkmalskatalog::show(db, *id);
             }
             MkCommands::Versions { id } => {
                 merkmalskatalog::show_versions_result(db, *id);

@@ -16,15 +16,21 @@ pub fn show_query_result(db: &Database, query: &String) {
         return;
     }
 
-    let term = Term::stdout();
-
     headline!("Formular auswählen");
-
+    let term = Term::stdout();
     if let Ok(Some(selection)) = EntitySelect::new().items(&forms).interact_on_opt(&term) {
         let _ = term.clear_last_lines(1);
         let value = forms.get(selection).unwrap();
-        green_headline!("Formular");
-        println!("{}", value);
+        show(db, value.id)
+    }
+}
+
+pub fn show(db: &Database, id: u64) {
+    let term = Term::stdout();
+    green_headline!("Formular");
+
+    if let Some(form) = database::form::get_by_id(db, id) {
+        println!("{}", form);
         headline!("Nächste Aktion auswählen");
 
         let mut items = vec![
@@ -33,7 +39,7 @@ pub fn show_query_result(db: &Database, query: &String) {
             "Alle Prozeduren löschen",
         ];
 
-        if !database::form::subforms(db, value.id).is_empty() {
+        if !database::form::subforms(db, id).is_empty() {
             items.push("Unterformulare anzeigen")
         }
 
@@ -43,18 +49,22 @@ pub fn show_query_result(db: &Database, query: &String) {
             .interact_on_opt(&term)
         {
             match selection {
-                1 => show_data_catalogues(db, value.id),
+                1 => show_data_catalogues(db, id),
                 2 => {
                     let _ = term.clear_last_lines(1);
-                    show_clean_dialogue(db, value.id)
+                    show_clean_dialogue(db, id)
                 }
-                3 => show_subforms(db, value.id),
+                3 => show_subforms(db, id),
                 _ => {
                     let _ = term.clear_last_lines(1);
                 }
             }
+            return;
         }
     }
+
+    warn!("Nicht gefunden");
+    println!();
 }
 
 pub fn show_subforms(db: &Database, id: u64) {

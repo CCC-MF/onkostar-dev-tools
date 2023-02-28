@@ -1,13 +1,29 @@
 use crate::database::Database;
 use crate::ui::SelectDisplay;
-use mysql::params;
-use mysql::prelude::Queryable;
+use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
+use mysql::{params, FromRowError, PooledConn, Row};
 use std::fmt::{Display, Formatter};
 
 #[derive(Debug)]
 pub struct MerkmalskatalogEntity {
-    pub id: u128,
+    pub id: u64,
     pub name: String,
+}
+
+impl FromRow for MerkmalskatalogEntity {
+    fn from_row_opt(row: Row) -> Result<Self, FromRowError>
+    where
+        Self: Sized,
+    {
+        if row.is_empty() {
+            return Err(FromRowError(row));
+        }
+
+        Ok(MerkmalskatalogEntity {
+            id: row.get(0).unwrap(),
+            name: row.get(1).unwrap(),
+        })
+    }
 }
 
 impl Display for MerkmalskatalogEntity {
@@ -24,7 +40,7 @@ impl SelectDisplay for MerkmalskatalogEntity {
 
 #[derive(Debug)]
 pub struct MerkmalskatalogVersionEntity {
-    pub id: u128,
+    pub id: u64,
     pub version: u64,
     pub description: String,
 }
@@ -47,7 +63,7 @@ impl SelectDisplay for MerkmalskatalogVersionEntity {
 
 #[derive(Debug)]
 pub struct MerkmalskatalogCategoryEntity {
-    pub id: u128,
+    pub id: u64,
     pub name: String,
     pub beschreibung: String,
 }
@@ -77,7 +93,18 @@ pub fn query(db: &Database, query: &String) -> Vec<MerkmalskatalogEntity> {
     vec![]
 }
 
-pub fn versions(db: &Database, id: u128) -> Vec<MerkmalskatalogVersionEntity> {
+pub fn get_by_id(db: &Database, id: u64) -> Option<MerkmalskatalogEntity> {
+    if let Ok(Some(result)) = "SELECT id, name FROM property_catalogue WHERE id = :id"
+        .with(params! {"id" => id})
+        .first::<MerkmalskatalogEntity, PooledConn>(db.connection())
+    {
+        Some(result)
+    } else {
+        None
+    }
+}
+
+pub fn versions(db: &Database, id: u64) -> Vec<MerkmalskatalogVersionEntity> {
     let sql = "SELECT id, version_number, description FROM property_catalogue_version \
             WHERE datacatalog_id = :id ORDER BY id";
 
@@ -97,7 +124,7 @@ pub fn versions(db: &Database, id: u128) -> Vec<MerkmalskatalogVersionEntity> {
     vec![]
 }
 
-pub fn values(db: &Database, version_id: u128) -> Vec<MerkmalskatalogCategoryEntity> {
+pub fn values(db: &Database, version_id: u64) -> Vec<MerkmalskatalogCategoryEntity> {
     let sql = "SELECT id, name, beschreibung FROM property_catalogue_category \
             WHERE version_id = :id ORDER BY id";
 

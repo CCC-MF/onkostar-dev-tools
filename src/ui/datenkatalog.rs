@@ -1,8 +1,7 @@
 use crate::database;
 use crate::database::Database;
-use crate::ui::EntitySelect;
+use crate::ui::{CustomTheme, EntitySelect};
 use console::{style, Term};
-use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
 use std::process::exit;
 
@@ -28,7 +27,7 @@ pub fn show_query_result(db: &Database, query: &String) {
         println!("{}", value);
         println!("Nächste Aktion auswählen:");
 
-        if let Ok(Some(selection)) = Select::with_theme(&ColorfulTheme::default())
+        if let Ok(Some(selection)) = Select::with_theme(&CustomTheme::default())
             .items(&["Ende", "Formulare anzeigen", "Prozeduren löschen"])
             .default(0)
             .interact_on_opt(&term)

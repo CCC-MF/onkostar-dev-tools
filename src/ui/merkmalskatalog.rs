@@ -1,7 +1,7 @@
 use crate::database::Database;
 use crate::ui::EntitySelect;
 use crate::{database, green_headline, headline, warn};
-use console::{style, Term};
+use console::Term;
 use std::process::exit;
 
 pub fn show_query_result(db: &Database, query: &String) {

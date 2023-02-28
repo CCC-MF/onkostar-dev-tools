@@ -1,7 +1,7 @@
 use clap::Parser;
-use console::style;
 use dialoguer::Password;
 use indicatif::ProgressBar;
+use std::process::exit;
 
 use crate::cli::{Cli, Commands, DkCommands, MkCommands, PatientCommands, UserCommands};
 use crate::database::Database;
@@ -17,6 +17,13 @@ fn main() {
     let (db_username, db_password) = db_login(cli.username, cli.password);
 
     let db = &Database::new(db_username, db_password, cli.host, cli.port, cli.dbname);
+    let db = match db {
+        Ok(db) => db,
+        Err(error_string) => {
+            warn!(error_string);
+            exit(1)
+        }
+    };
 
     match &cli.command {
         Commands::Datenkatalog { command } | Commands::DK { command } => match command {

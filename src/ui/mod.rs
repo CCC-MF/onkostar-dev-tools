@@ -1,4 +1,4 @@
-use console::{style, Term};
+use console::Term;
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::{Input, Password, Select};
 use std::io::Error;
@@ -10,6 +10,7 @@ pub struct CustomTheme;
 
 impl CustomTheme {
     fn default() -> ColorfulTheme {
+        use console::style;
         ColorfulTheme {
             active_item_prefix: style(">".into()).for_stderr().green(),
             ..ColorfulTheme::default()
@@ -81,28 +82,32 @@ pub fn db_login(username: Option<String>, password: Option<String>) -> (String, 
 
 #[macro_export]
 macro_rules! success {
-    ($str:expr) => {
+    ($str:expr) => {{
+        use console::style;
         println!("{}", style($str).green())
-    };
+    }};
 }
 
 #[macro_export]
 macro_rules! warn {
-    ($str:expr) => {
+    ($str:expr) => {{
+        use console::style;
         println!("{}", style($str).yellow())
-    };
+    }};
 }
 
 #[macro_export]
 macro_rules! green_headline {
-    ($str:expr) => {
+    ($str:expr) => {{
+        use console::style;
         println!("{}", style($str).green().bold())
-    };
+    }};
 }
 
 #[macro_export]
 macro_rules! headline {
-    ($str:expr) => {
+    ($str:expr) => {{
+        use console::style;
         println!("{}", style($str).bold())
-    };
+    }};
 }

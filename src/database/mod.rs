@@ -1,10 +1,11 @@
+use mysql::Error::{DriverError, MySqlError};
+use mysql::{Pool, PooledConn};
+
 pub mod datenkatalog;
 pub mod form;
 pub mod merkmalskatalog;
 pub mod patient;
 pub mod user;
-
-use mysql::{Pool, PooledConn};
 
 pub struct Database {
     pool: Pool,
@@ -17,10 +18,19 @@ impl Database {
         host: String,
         port: String,
         name: String,
-    ) -> Database {
+    ) -> Result<Database, String> {
         let url = format!("mysql://{username}:{password}@{host}:{port}/{name}");
-        let pool = Pool::new(url.as_str()).expect("connection pool");
-        Database { pool }
+        match Pool::new(url.as_str()) {
+            Ok(pool) => Ok(Database { pool }),
+            Err(e) => {
+                let cause = match e {
+                    DriverError(e) => e.to_string(),
+                    MySqlError(e) => e.to_string(),
+                    _ => "Keine weiteren Angaben".to_string(),
+                };
+                return Err(format!("Keine Datenbankverbindung möglich: {}", cause));
+            }
+        }
     }
 
     fn connection(&self) -> PooledConn {

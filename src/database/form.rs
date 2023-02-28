@@ -11,7 +11,11 @@ pub struct FormEntity {
 
 impl Display for FormEntity {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}: {}", self.id, self.name)
+        writeln!(
+            f,
+            "ID:           {}\nName:         {}\nBeschreibung: {}",
+            self.id, self.name, self.description
+        )
     }
 }
 

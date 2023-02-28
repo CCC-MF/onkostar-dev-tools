@@ -79,7 +79,7 @@ fn main() {
                 None => {
                     let msg = match login {
                         Some(login) => format!("Neues Passwort für Benutzer '{}' setzen", login),
-                        None => "Neues Passwort für alle Benutzer setzen".to_string()
+                        None => "Neues Passwort für alle Benutzer setzen".to_string(),
                     };
                     println!("{}", style(msg).green().bold());
                     if let Ok(password) = Password::new()

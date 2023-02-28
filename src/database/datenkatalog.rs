@@ -1,9 +1,10 @@
+use crate::database::form::{by_data_catalogue_id, FormEntity};
 use crate::database::Database;
+use crate::ui::SelectDisplay;
 use mysql::prelude::{BinQuery, Queryable, TextQuery, WithParams};
 use mysql::{params, PooledConn};
 use regex::Regex;
 use std::fmt::{Display, Formatter};
-use crate::database::form::{by_data_catalogue_id, FormEntity};
 
 pub struct DatenkatalogEntity {
     pub id: u64,
@@ -13,7 +14,17 @@ pub struct DatenkatalogEntity {
 
 impl Display for DatenkatalogEntity {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}: {}", self.id, self.name)
+        writeln!(
+            f,
+            "ID:           {}\nName:         {}\nBeschreibung: {}",
+            self.id, self.name, self.description
+        )
+    }
+}
+
+impl SelectDisplay for DatenkatalogEntity {
+    fn to_string(&self) -> String {
+        format!("{}: {}", self.id, self.name)
     }
 }
 

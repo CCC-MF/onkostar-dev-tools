@@ -1,5 +1,6 @@
 use crate::database;
 use crate::database::Database;
+use crate::ui::EntitySelect;
 use console::{style, Term};
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
@@ -13,25 +14,18 @@ pub fn show_query_result(db: &Database, query: &String) {
     } else if dks.is_empty() {
         println!("{}", style("Keine Einträge").yellow());
         println!();
-        return
+        return;
     }
 
     let term = Term::stdout();
 
-    println!("\nDatenkatalog auswählen:");
+    println!("Datenkatalog auswählen:");
 
-    if let Ok(Some(selection)) = Select::with_theme(&ColorfulTheme::default())
-        .items(&dks)
-        .default(0)
-        .interact_on_opt(&term)
-    {
-        let _ = term.clear_last_lines(2);
+    if let Ok(Some(selection)) = EntitySelect::new().items(&dks).interact_on_opt(&term) {
+        let _ = term.clear_last_lines(1);
         let value = dks.get(selection).unwrap();
         println!("{}", style("Datenkatalog").green().bold());
-        println!("ID:           {}", value.id);
-        println!("Name:         {}", value.name);
-        println!("Beschreibung: {}", value.description);
-        println!();
+        println!("{}", value);
         println!("Nächste Aktion auswählen:");
 
         if let Ok(Some(selection)) = Select::with_theme(&ColorfulTheme::default())
@@ -41,16 +35,15 @@ pub fn show_query_result(db: &Database, query: &String) {
         {
             match selection {
                 1 => {
-                    println!();
                     show_forms(db, value.id)
-                },
+                }
                 2 => {
                     let _ = term.clear_last_lines(1);
                     show_clean_dialogue(db, value.id)
-                },
+                }
                 _ => {
                     let _ = term.clear_last_lines(1);
-                },
+                }
             }
         }
     }
@@ -58,23 +51,23 @@ pub fn show_query_result(db: &Database, query: &String) {
 
 pub fn show_forms(db: &Database, id: u64) {
     let term = Term::stdout();
-    let _ = term.clear_last_lines(2);
+    let _ = term.clear_last_lines(1);
 
-    println!("{}", style("Formulare mit diesem Datenkatalog").green().bold());
+    println!(
+        "{}",
+        style("Formulare mit diesem Datenkatalog").green().bold()
+    );
 
     let forms = database::datenkatalog::forms(db, id);
 
     if forms.is_empty() {
         println!("{}", style("Keine Einträge").yellow());
         println!();
-        return
+        return;
     }
 
     for form in forms {
-        println!("ID:           {}", form.id);
-        println!("Name:         {}", form.name);
-        println!("Beschreibung: {}", form.description);
-        println!()
+        println!("{}", form);
     }
 }
 
@@ -88,7 +81,7 @@ pub fn show_clean_dialogue(db: &Database, id: u64) {
                 style(count).green(),
                 style(name).bold()
             );
-            return
+            return;
         }
     }
     println!("{}", style("Keine Einträge").yellow());

@@ -1,4 +1,5 @@
 use crate::database::Database;
+use crate::ui::SelectDisplay;
 use mysql::params;
 use mysql::prelude::Queryable;
 use std::fmt::{Display, Formatter};
@@ -11,7 +12,17 @@ pub struct MerkmalskatalogEntity {
 
 impl Display for MerkmalskatalogEntity {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}: {}", self.id, self.name)
+        writeln!(
+            f,
+            "ID:           {}\nName:         {}",
+            self.id, self.name
+        )
+    }
+}
+
+impl SelectDisplay for MerkmalskatalogEntity {
+    fn to_string(&self) -> String {
+        format!("{}: {}", self.id, self.name)
     }
 }
 
@@ -24,7 +35,17 @@ pub struct MerkmalskatalogVersionEntity {
 
 impl Display for MerkmalskatalogVersionEntity {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}: {}", self.id, self.description)
+        writeln!(
+            f,
+            "ID:           {}\nBeschreibung: {}",
+            self.id, self.version
+        )
+    }
+}
+
+impl SelectDisplay for MerkmalskatalogVersionEntity {
+    fn to_string(&self) -> String {
+        format!("{}: {}", self.id, self.description)
     }
 }
 
@@ -33,6 +54,16 @@ pub struct MerkmalskatalogCategoryEntity {
     pub id: u128,
     pub name: String,
     pub beschreibung: String,
+}
+
+impl Display for MerkmalskatalogCategoryEntity {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        writeln!(
+            f,
+            "ID:           {}\nName:         {}\nBeschreibung: {}",
+            self.id, self.name, self.beschreibung
+        )
+    }
 }
 
 pub fn query(db: &Database, query: &String) -> Vec<MerkmalskatalogEntity> {

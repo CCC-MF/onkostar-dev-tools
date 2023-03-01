@@ -1,5 +1,5 @@
 use console::Term;
-use dialoguer::theme::ColorfulTheme;
+use dialoguer::theme::Theme;
 use dialoguer::{Input, Password, Select};
 use std::io::Error;
 
@@ -11,11 +11,16 @@ pub mod page;
 pub struct CustomTheme;
 
 impl CustomTheme {
-    fn default() -> ColorfulTheme {
-        use console::style;
-        ColorfulTheme {
-            active_item_prefix: style(">".into()).for_stderr().green(),
-            ..ColorfulTheme::default()
+    fn default() -> impl Theme {
+        #[cfg(windows)]
+        {
+            use dialoguer::theme::SimpleTheme;
+            SimpleTheme
+        }
+        #[cfg(unix)]
+        {
+            use dialoguer::theme::ColorfulTheme;
+            ColorfulTheme::default()
         }
     }
 }

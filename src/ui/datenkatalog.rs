@@ -25,6 +25,15 @@ pub fn show_query_result(db: &Database, query: &String) {
         let value = dks.get(selection).unwrap();
         green_headline!("Datenkatalog");
         println!("{}", value);
+
+    }
+}
+
+pub fn show(db: &Database, id: u64) {
+    let term = Term::stdout();
+    green_headline!("Datenkatalog");
+    if let Some(dk) = database::datenkatalog::get_by_id(db, id) {
+        println!("{}", dk);
         headline!("Nächste Aktion auswählen");
 
         if let Ok(Some(selection)) = Select::with_theme(&CustomTheme::default())
@@ -33,24 +42,17 @@ pub fn show_query_result(db: &Database, query: &String) {
             .interact_on_opt(&term)
         {
             match selection {
-                1 => show_forms(db, value.id),
+                1 => show_forms(db, dk.id),
                 2 => {
                     let _ = term.clear_last_lines(1);
-                    show_clean_dialogue(db, value.id)
+                    show_clean_dialogue(db, dk.id)
                 }
                 _ => {
                     let _ = term.clear_last_lines(1);
                 }
             }
         }
-    }
-}
-
-pub fn show(db: &Database, id: u64) {
-    if let Some(dk) = database::datenkatalog::get_by_id(db, id) {
-        green_headline!("Datenkatalog");
-        println!("{}", dk);
-        return;
+        return
     }
 
     warn!("Nicht gefunden");

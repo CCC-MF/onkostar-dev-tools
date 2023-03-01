@@ -3,6 +3,7 @@ use crate::ui::EntitySelect;
 use crate::{database, green_headline, headline, warn};
 use console::Term;
 use std::process::exit;
+use dialoguer::Confirm;
 
 pub fn show_query_result(db: &Database, query: &String) {
     let mks = database::merkmalskatalog::query(db, query);
@@ -21,16 +22,15 @@ pub fn show_query_result(db: &Database, query: &String) {
     if let Ok(Some(selection)) = EntitySelect::new().items(&mks).interact_on_opt(&term) {
         let _ = term.clear_last_lines(1);
         let value = mks.get(selection).unwrap();
-        green_headline!("Merkmalskatalog");
-        println!("{}", value);
-        show_versions_result(db, value.id);
+        show(db, value.id);
     }
 }
 
 pub fn show(db: &Database, id: u64) {
+    green_headline!("Merkmalskatalog");
     if let Some(mk) = database::merkmalskatalog::get_by_id(db, id) {
-        green_headline!("Merkmalskatalog");
         println!("{}", mk);
+        show_versions_result(db, mk.id);
         return;
     }
 
@@ -39,28 +39,29 @@ pub fn show(db: &Database, id: u64) {
 }
 
 pub fn show_versions_result(db: &Database, id: u64) {
-    let versions = database::merkmalskatalog::versions(db, id);
-
     let term = Term::stdout();
 
-    headline!("Version auswählen");
-
-    if let Ok(Some(selection)) = EntitySelect::new().items(&versions).interact_on_opt(&term) {
+    if let Ok(true) = Confirm::new().with_prompt("Version auswählen und anzeigen?").default(false).interact() {
         let _ = term.clear_last_lines(1);
-        let value = versions.get(selection).unwrap();
+        let versions = database::merkmalskatalog::versions(db, id);
+        headline!("Version auswählen");
+        if let Ok(Some(selection)) = EntitySelect::new().items(&versions).interact_on_opt(&term) {
+            let _ = term.clear_last_lines(1);
+            let value = versions.get(selection).unwrap();
 
-        green_headline!("Version des Merkmalskatalogs");
-        println!("{}", value);
-
-        green_headline!("Merkmale");
-        let result = database::merkmalskatalog::values(db, value.id);
-        if result.is_empty() {
-            warn!("Keine Einträge");
-            println!();
-            return;
-        }
-        result.into_iter().for_each(|value| {
+            green_headline!("Version des Merkmalskatalogs");
             println!("{}", value);
-        })
+
+            green_headline!("Merkmale");
+            let result = database::merkmalskatalog::values(db, value.id);
+            if result.is_empty() {
+                warn!("Keine Einträge");
+                println!();
+                return;
+            }
+            result.into_iter().for_each(|value| {
+                println!("{}", value);
+            })
+        }
     }
 }

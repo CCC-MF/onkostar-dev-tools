@@ -4,6 +4,7 @@ use crate::{database, green_headline, headline, warn};
 use console::Term;
 use std::process::exit;
 use dialoguer::Confirm;
+use crate::ui::page::Page;
 
 pub fn show_query_result(db: &Database, query: &String) {
     let mks = database::merkmalskatalog::query(db, query);
@@ -52,16 +53,8 @@ pub fn show_versions_result(db: &Database, id: u64) {
             green_headline!("Version des Merkmalskatalogs");
             println!("{}", value);
 
-            green_headline!("Merkmale");
             let result = database::merkmalskatalog::values(db, value.id);
-            if result.is_empty() {
-                warn!("Keine Einträge");
-                println!();
-                return;
-            }
-            result.into_iter().for_each(|value| {
-                println!("{}", value);
-            })
+            Page::with(&result, 4).show("Merkmale");
         }
     }
 }

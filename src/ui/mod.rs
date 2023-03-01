@@ -6,6 +6,7 @@ use std::io::Error;
 pub mod datenkatalog;
 pub mod form;
 pub mod merkmalskatalog;
+pub mod page;
 
 pub struct CustomTheme;
 
@@ -94,6 +95,14 @@ macro_rules! warn {
     ($str:expr) => {{
         use console::style;
         println!("{}", style($str).yellow())
+    }};
+}
+
+#[macro_export]
+macro_rules! blue_headline {
+    ($str:expr) => {{
+        use console::style;
+        println!("{}", style($str).blue().bold())
     }};
 }
 

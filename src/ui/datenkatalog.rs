@@ -4,6 +4,7 @@ use crate::{database, green_headline, headline, warn};
 use console::{style, Term};
 use dialoguer::Select;
 use std::process::exit;
+use crate::ui::page::Page;
 
 pub fn show_query_result(db: &Database, query: &String) {
     let dks = database::datenkatalog::query(db, query);
@@ -63,19 +64,8 @@ pub fn show_forms(db: &Database, id: u64) {
     let term = Term::stdout();
     let _ = term.clear_last_lines(1);
 
-    green_headline!("Formulare mit diesem Datenkatalog");
-
     let forms = database::datenkatalog::forms(db, id);
-
-    if forms.is_empty() {
-        warn!("Keine Einträge");
-        println!();
-        return;
-    }
-
-    for form in forms {
-        println!("{}", form);
-    }
+    Page::with(&forms, 4).show("Formulare mit diesem Datenkatalog");
 }
 
 pub fn show_clean_dialogue(db: &Database, id: u64) {

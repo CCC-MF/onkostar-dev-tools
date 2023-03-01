@@ -4,6 +4,7 @@ use crate::{database, green_headline, headline, warn};
 use console::{style, Term};
 use dialoguer::Select;
 use std::process::exit;
+use crate::ui::page::Page;
 
 pub fn show_query_result(db: &Database, query: &String) {
     let forms = database::form::query(db, query);
@@ -71,38 +72,16 @@ pub fn show_subforms(db: &Database, id: u64) {
     let term = Term::stdout();
     let _ = term.clear_last_lines(1);
 
-    green_headline!("Unterformulare dieses Formulars");
-
     let forms = database::form::subforms(db, id);
-
-    if forms.is_empty() {
-        warn!("Keine Einträge");
-        println!();
-        return;
-    }
-
-    for form in forms {
-        println!("{}", form);
-    }
+    Page::with(&forms, 4).show("Unterformulare dieses Formulars");
 }
 
 pub fn show_data_catalogues(db: &Database, id: u64) {
     let term = Term::stdout();
     let _ = term.clear_last_lines(1);
 
-    green_headline!("Datenkataloge dieses Formulars");
-
-    let forms = database::form::data_catalogues(db, id);
-
-    if forms.is_empty() {
-        warn!("Keine Einträge");
-        println!();
-        return;
-    }
-
-    for form in forms {
-        println!("{}", form);
-    }
+    let dks = database::form::data_catalogues(db, id);
+    Page::with(&dks, 4).show("Datenkataloge dieses Formulars");
 }
 
 pub fn show_clean_dialogue(db: &Database, id: u64) {

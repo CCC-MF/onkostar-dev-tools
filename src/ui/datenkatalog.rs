@@ -24,9 +24,7 @@ pub fn show_query_result(db: &Database, query: &String) {
     if let Ok(Some(selection)) = EntitySelect::new().items(&dks).interact_on_opt(&term) {
         let _ = term.clear_last_lines(1);
         let value = dks.get(selection).unwrap();
-        green_headline!("Datenkatalog");
-        println!("{}", value);
-
+        show(db, value.id)
     }
 }
 

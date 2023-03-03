@@ -35,23 +35,25 @@ Options:
   -V, --version              Print version
 ```
 
-## Benutzer
+## Befehle
+
+### Benutzer
 
 Befehle zur Benutzerverwaltung
 
 * Ändern des Benutzerpasswords: `onkostar-dev-tools user password [--login <LOGIN>] <PASSWORD>`
 
-## Patienten
+### Patienten
 
 Befehle zum Anpassen von Patienten
 
 * Anonymisieren von Patientendaten in Tabelle `patient`: `onkostar-dev-tools patient anonym`
 
-## Datenkataloge
+### Datenkataloge
 
 Befehle für Datenkataloge.
 
-### Anzeige von Datenkatalogen
+#### Anzeige von Datenkatalogen
 
 Die beiden Unterbefehle `datenkatalog` und `dk` sind identisch.
 
@@ -59,41 +61,41 @@ Der Befehl `onkostar-dev-tools datenkatalog ls -q <QUERY>` zeigt eine Liste von 
 
 Mit dem Befehl `onkostar-dev-tools dk show <ID>` wird ein einzelner Eintrag angezeigt.
 
-### Anzeige von Formularen die einen Datenkatalog verwenden
+#### Anzeige von Formularen die einen Datenkatalog verwenden
 
 Der Befehl `onkostar-dev-tools datenkatalog forms <ID>` zeigt eine Liste von Formularen an, die den angegebenen Datenkatalog verwenden.
 
-### Entfernen von Einträgen in Datenkatalogen
+#### Entfernen von Einträgen in Datenkatalogen
 
 Der Befehl `onkostar-dev-tools datenkatalog clean <ID>` entfernt alle Einträge aus einer Datenkatalogtabelle und zugehörige Einträge in der Tabelle `prozedur`, sowie für Unterformulare. Die Anzahl der gelöschten Einträge wird angezeigt.
 
-## Formulare
+### Formulare
 
 Befehle für Formulare
 
-### Anzeige von Formularen
+#### Anzeige von Formularen
 
 Der Befehl `onkostar-dev-tools form ls -q <QUERY>` zeigt eine Liste von Formularen an, die die angegebene Zeichenkette beinhalten. Nach Auswahl eines Formulars werden ID, Name und Beschreibung des Formulars angezeigt. Danach sind interaktiv weitere Aktionen möglich.
 
 Mit dem Befehl `onkostar-dev-tools form show <ID>` wird ein einzelner Eintrag angezeigt.
 
-### Anzeige von Unterformularen
+#### Anzeige von Unterformularen
 
 Der Befehl `onkostar-dev-tools form uf <ID>` zeigt eine Liste der verwendeten Unterformulare an.
 
-### Anzeige von Datenkatalogen, die in einem Formular verwendet werden
+#### Anzeige von Datenkatalogen, die in einem Formular verwendet werden
 
 Der Befehl `onkostar-dev-tools form dk <ID>` zeigt eine Liste von Datenkatalogen an, die im angegebenen Formular verwendet werden.
 
-### Entfernen von Einträgen in Datenkatalogen dieses Formulars
+#### Entfernen von Einträgen in Datenkatalogen dieses Formulars
 
 Der Befehl `onkostar-dev-tools form clean <ID>` entfernt alle Einträge aus zum Formular gehörenden Datenkatalogtabellen und zugehörige Einträge in der Tabelle `prozedur`, sowie für Unterformulare. Die Anzahl der gelöschten Einträge wird angezeigt.
 
-## Merkmalskataloge
+### Merkmalskataloge
 
 Befehle zur Recherche in Merkmalskatalogen.
 
-### Anzeige von Merkmalskatalogen
+#### Anzeige von Merkmalskatalogen
 
 Die beiden Unterbefehle `merkmalskatalog` und `mk` sind identisch.
 
@@ -101,6 +103,16 @@ Der Befehl `onkostar-dev-tools merkmalskatalog ls -q <QUERY>` zeigt eine Liste v
 
 Mit dem Befehl `onkostar-dev-tools mk show <ID>` wird ein einzelner Eintrag angezeigt.
 
-### Anzeige einer Version eines Merkmalskatalogs
+#### Anzeige einer Version eines Merkmalskatalogs
 
 Der Befehl `onkostar-dev-tools merkmalskatalog versions <ID>` zeigt eine Liste von Versionen des gewählten Merkmalskatalogs an. Nach Auswahl einer Version werden die Inhalte angezeigt.
+
+## Autovervollständigung
+
+Die Anwendung erlaubt die Erstellung von Scripts zur Autovervollständigung. Unterstützt werden Bash, Zsh, Fish und PowerShell.
+
+Beispiel für Bash:
+
+```shell
+onkostar-dev-tools completions bash > ~/.local/share/bash-completion/completions/onkostar-dev-tools
+```

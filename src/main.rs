@@ -1,7 +1,9 @@
-use clap::Parser;
+use std::io;
+use clap::{CommandFactory, Parser};
 use dialoguer::Password;
 use indicatif::ProgressBar;
 use std::process::exit;
+use clap_complete::generate;
 
 use crate::cli::{
     Cli, Commands, DkCommands, FormCommands, MkCommands, PatientCommands, UserCommands,
@@ -16,6 +18,21 @@ mod ui;
 fn main() {
     let cli = Cli::parse();
 
+    if let Commands::Completions { shell } = cli.commands {
+        let exe_name = std::env::current_exe()
+            .ok()
+            .and_then(|exe| exe.file_name().map(|s| s.to_os_string()))
+            .and_then(|s| s.into_string().ok());
+
+        let command_name = if let Some(command_name) = exe_name {
+            command_name
+        } else {
+            "onkostar_dev_tools".to_string()
+        };
+        generate(shell, &mut Cli::command(), command_name, &mut io::stdout());
+        return
+    }
+
     let (db_username, db_password) = db_login(cli.username, cli.password);
 
     let db = &Database::new(db_username, db_password, cli.host, cli.port, cli.dbname);
@@ -27,7 +44,8 @@ fn main() {
         }
     };
 
-    match &cli.command {
+    match &cli.commands {
+        Commands::Completions { .. } => { /* Command handled before */ },
         Commands::Datenkatalog { command } | Commands::DK { command } => match command {
             DkCommands::Ls { query } => {
                 datenkatalog::show_query_result(db, query);

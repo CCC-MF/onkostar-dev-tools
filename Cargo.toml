@@ -6,6 +6,7 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.1", features = ["std", "help", "usage", "derive", "error-context" ], default-features = false }
+clap_complete = "4.1"
 dialoguer = "0.10"
 console = "0.15"
 indicatif = "0.17"

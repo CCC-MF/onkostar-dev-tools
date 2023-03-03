@@ -5,7 +5,7 @@ use clap::{Parser, Subcommand};
 #[command(propagate_version = true, arg_required_else_help(true))]
 pub struct Cli {
     #[command(subcommand)]
-    pub command: Commands,
+    pub commands: Commands,
     #[arg(short = 'U', long = "user", help = "Benutzername für Datenbankzugriff")]
     pub username: Option<String>,
     #[arg(long = "password", help = "Passwort für Datenbankzugriff")]
@@ -35,6 +35,10 @@ pub struct Cli {
 
 #[derive(Clone, Subcommand)]
 pub enum Commands {
+    #[command(hide = true)]
+    Completions {
+        shell: clap_complete::shells::Shell
+    },
     #[command(about = "Befehle für Datenkataloge")]
     Datenkatalog {
         #[command(subcommand)]

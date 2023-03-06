@@ -3,6 +3,7 @@ use crate::ui::SelectDisplay;
 use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
 use mysql::{params, FromRowError, PooledConn, Row};
 use std::fmt::{Display, Formatter};
+use crate::database::prozedur::{ProcedureForm, procedures_by_patient_id};
 
 #[derive(Debug)]
 pub struct PatientEntity {
@@ -44,23 +45,6 @@ impl SelectDisplay for PatientEntity {
     }
 }
 
-#[derive(Debug)]
-pub struct ProcedureForm {
-    pub procedure_id: u64,
-    pub data_form_id: u64,
-    pub data_form_name: String,
-}
-
-impl Display for ProcedureForm {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(
-            f,
-            "Prozedur-ID:  {}\nFormularname: {}\n",
-            self.procedure_id, self.data_form_name
-        )
-    }
-}
-
 pub fn query(db: &Database, query: &String) -> Vec<PatientEntity> {
     let sql = "SELECT id, vorname, nachname FROM patient \
             WHERE LOWER(vorname) LIKE :name OR LOWER(nachname) LIKE :name ORDER BY id";
@@ -92,23 +76,7 @@ pub fn get_by_id(db: &Database, id: u64) -> Option<PatientEntity> {
 }
 
 pub fn procedures(db: &Database, patient_id: u64) -> Vec<ProcedureForm> {
-    let sql = "SELECT prozedur.id, data_form.id, data_form.name FROM prozedur \
-        JOIN data_form ON prozedur.data_form_id = data_form.id \
-        WHERE patient_id = :patient_id ORDER BY prozedur.id";
-
-    if let Ok(result) = db.connection().exec_map(
-        sql,
-        params! {"patient_id" => patient_id},
-        |(procedure_id, data_form_id, data_form_name)| ProcedureForm {
-            procedure_id,
-            data_form_id,
-            data_form_name,
-        },
-    ) {
-        return result;
-    };
-
-    vec![]
+    procedures_by_patient_id(db, patient_id)
 }
 
 pub fn count_non_anonym(db: &Database) -> u64 {

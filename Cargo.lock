@@ -951,6 +951,7 @@ dependencies = [
  "indicatif",
  "mysql",
  "regex",
+ "time",
 ]
 
 [[package]]
@@ -1445,6 +1446,7 @@ version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "53250a3b3fed8ff8fd988587d8925d26a83ac3845d9e03b220b37f34c2b8d6c2"
 dependencies = [
+ "serde",
  "time-core",
  "time-macros",
 ]

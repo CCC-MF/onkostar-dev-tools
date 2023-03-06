@@ -5,6 +5,7 @@ pub mod datenkatalog;
 pub mod form;
 pub mod merkmalskatalog;
 pub mod patient;
+pub mod prozedur;
 pub mod user;
 
 pub struct Database {

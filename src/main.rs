@@ -1,3 +1,5 @@
+extern crate core;
+
 use clap::{CommandFactory, Parser};
 use clap_complete::generate;
 use dialoguer::Password;

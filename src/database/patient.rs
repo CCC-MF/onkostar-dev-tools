@@ -1,7 +1,8 @@
 use crate::database::Database;
-use mysql::params;
-use mysql::prelude::Queryable;
+use mysql::{FromRowError, params, PooledConn, Row};
+use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
 use std::fmt::{Display, Formatter};
+use crate::ui::SelectDisplay;
 
 #[derive(Debug)]
 pub struct PatientEntity {
@@ -10,12 +11,52 @@ pub struct PatientEntity {
     pub nachname: String,
 }
 
+impl FromRow for PatientEntity {
+    fn from_row_opt(row: Row) -> Result<Self, FromRowError>
+        where
+            Self: Sized,
+    {
+        if row.is_empty() {
+            return Err(FromRowError(row));
+        }
+
+        Ok(PatientEntity {
+            id: row.get(0).unwrap(),
+            vorname: row.get(1).unwrap(),
+            nachname: row.get(2).unwrap(),
+        })
+    }
+}
+
 impl Display for PatientEntity {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(
             f,
-            "ID:           {}\nVorname:      {}\nNachname:     {}\n",
+            "ID:           {}\nVorname:      {}\nNachname:     {}",
             self.id, self.vorname, self.nachname
+        )
+    }
+}
+
+impl SelectDisplay for PatientEntity {
+    fn to_string(&self) -> String {
+        format!("{}: {}, {}", self.id, self.nachname, self.vorname)
+    }
+}
+
+#[derive(Debug)]
+pub struct ProcedureForm {
+    pub procedure_id: u64,
+    pub data_form_id: u64,
+    pub data_form_name: String,
+}
+
+impl Display for ProcedureForm {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        writeln!(
+            f,
+            "Prozedur-ID:  {}\nFormularname: {}\n",
+            self.procedure_id, self.data_form_name
         )
     }
 }
@@ -31,6 +72,37 @@ pub fn query(db: &Database, query: &String) -> Vec<PatientEntity> {
             id,
             vorname,
             nachname,
+        },
+    ) {
+        return result;
+    };
+
+    vec![]
+}
+
+pub fn get_by_id(db: &Database, id: u64) -> Option<PatientEntity> {
+    if let Ok(Some(result)) = "SELECT id, vorname, nachname FROM patient WHERE id = :id"
+        .with(params! {"id" => id})
+        .first::<PatientEntity, PooledConn>(db.connection())
+    {
+        Some(result)
+    } else {
+        None
+    }
+}
+
+pub fn procedures(db: &Database, patient_id: u64) -> Vec<ProcedureForm> {
+    let sql = "SELECT procedure.id, data_form.id, data_form.name FROM procedure \
+        JOIN data_form ON procedure.data_form_id = data_form.id \
+        WHERE patient_id = :patient_id ORDER BY id";
+
+    if let Ok(result) = db.connection().exec_map(
+        sql,
+        params! {"patient_id" => patient_id},
+        |(procedure_id, data_form_id, data_form_name)| ProcedureForm {
+            procedure_id,
+            data_form_id,
+            data_form_name,
         },
     ) {
         return result;

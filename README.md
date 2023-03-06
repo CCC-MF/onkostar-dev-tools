@@ -49,6 +49,10 @@ Befehle zum Anpassen von Patienten
 
 * Anonymisieren von Patientendaten in Tabelle `patient`: `onkostar-dev-tools patient anonym`
 
+#### Anzeige von Patienten
+
+Der Befehl `onkostar-dev-tools patient ls -q <QUERY>` zeigt eine Liste von Patienten an, deren Vor- oder Nachname die angegebene Zeichenkette beinhalten.
+
 ### Datenkataloge
 
 Befehle für Datenkataloge.

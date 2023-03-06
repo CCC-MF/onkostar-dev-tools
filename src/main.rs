@@ -82,19 +82,10 @@ fn main() {
         },
         Commands::Patient { command } => match command {
             PatientCommands::Anonym => {
-                let count = database::patient::count_non_anonym(db);
-
-                println!("Anonymisiere {count} Patienten ...");
-
-                let bar = ProgressBar::new(count);
-                for _ in 0..count {
-                    if let Ok(id) = database::patient::next(db) {
-                        database::patient::anonymize(db, id);
-                        bar.inc(1);
-                    }
-                }
-                bar.finish();
-                println!("... fertig!")
+                patient::anonymize(db)
+            },
+            PatientCommands::Ls { query } => {
+                patient::show_query_result(db, query);
             }
         },
         Commands::User { command } => match command {

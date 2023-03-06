@@ -152,6 +152,11 @@ pub enum MkCommands {
 pub enum PatientCommands {
     #[command(about = "Anonymisiert Patientendaten")]
     Anonym,
+    #[command(about = "Zeigt eine Liste von gefilterten Patienten an")]
+    Ls {
+        #[arg(short = 'q', long = "query", help = "Suchbegriff für Vor- und Nachname")]
+        query: String,
+    },
 }
 
 #[derive(Clone, Subcommand)]

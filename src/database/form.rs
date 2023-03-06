@@ -46,11 +46,11 @@ impl SelectDisplay for FormEntity {
 
 pub fn query(db: &Database, query: &String) -> Vec<FormEntity> {
     let sql = "SELECT id, name, description FROM data_form \
-        WHERE name LIKE :name";
+        WHERE LOWER(name) LIKE :name";
 
     if let Ok(result) = db.connection().exec_map(
         sql,
-        params! {"name" => format!("{query}%")},
+        params! {"name" => format!("%{query}%")},
         |(id, name, description)| FormEntity {
             id,
             name,

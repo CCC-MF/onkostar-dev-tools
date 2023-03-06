@@ -46,11 +46,11 @@ impl SelectDisplay for DatenkatalogEntity {
 }
 
 pub fn query(db: &Database, query: &String) -> Vec<DatenkatalogEntity> {
-    let sql = "SELECT id, name, description FROM data_catalogue WHERE name LIKE :name";
+    let sql = "SELECT id, name, description FROM data_catalogue WHERE LOWER(name) LIKE :name";
 
     if let Ok(result) = db.connection().exec_map(
         sql,
-        params! {"name" => format!("{query}%")},
+        params! {"name" => format!("%{query}%")},
         |(id, name, description)| DatenkatalogEntity {
             id,
             name,

@@ -2,6 +2,7 @@ use mysql::Error::{DriverError, MySqlError};
 use mysql::{Pool, PooledConn};
 
 pub mod datenkatalog;
+pub mod disease;
 pub mod form;
 pub mod merkmalskatalog;
 pub mod patient;

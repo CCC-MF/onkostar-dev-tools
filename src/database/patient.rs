@@ -1,9 +1,9 @@
+use crate::database::prozedur::{procedures_by_patient_id, ProcedureForm};
 use crate::database::Database;
 use crate::ui::SelectDisplay;
 use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
 use mysql::{params, FromRowError, PooledConn, Row};
 use std::fmt::{Display, Formatter};
-use crate::database::prozedur::{ProcedureForm, procedures_by_patient_id};
 
 #[derive(Debug)]
 pub struct PatientEntity {

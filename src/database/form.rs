@@ -1,4 +1,4 @@
-use crate::database::datenkatalog::{by_data_form_id, DatenkatalogEntity};
+use crate::database::datenkatalog::{find_by_data_form_id, DatenkatalogEntity};
 use crate::database::Database;
 use crate::ui::SelectDisplay;
 use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
@@ -118,5 +118,5 @@ pub fn subforms(db: &Database, id: u64) -> Vec<FormEntity> {
 }
 
 pub fn data_catalogues(db: &Database, id: u64) -> Vec<DatenkatalogEntity> {
-    by_data_form_id(db, id)
+    find_by_data_form_id(db, id)
 }

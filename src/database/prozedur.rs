@@ -1,5 +1,6 @@
+use crate::database::datenkatalog::{delete_entry, find_by_procedure_id};
 use crate::database::Database;
-use mysql::prelude::{FromRow, Queryable};
+use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
 use mysql::{params, FromRowError, Row};
 use std::fmt::{Display, Formatter};
 use time::PrimitiveDateTime;
@@ -70,6 +71,21 @@ pub fn procedures_by_patient_id(db: &Database, patient_id: u64) -> Vec<Procedure
     vec![]
 }
 
-pub fn delete_procedure(db: &Database, id: u64) {
+pub fn delete(db: &Database, id: u64) -> u64 {
+    let mut count = 0;
+    find_by_procedure_id(db, id).iter().for_each(|dk| {
+        if delete_entry(db, dk.id, id) {
+            count += 1;
+        }
+    });
 
+    if "DELETE FROM prozedur WHERE id = :id"
+        .with(params! {"id" => id})
+        .run(db.connection())
+        .is_ok()
+    {
+        count += 1
+    }
+
+    count
 }

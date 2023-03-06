@@ -1,10 +1,11 @@
+use crate::database::disease::delete;
 use crate::database::Database;
 use crate::ui::page::Page;
 use crate::ui::{CustomTheme, EntitySelect};
 use crate::{database, green_headline, headline, warn};
 use console::Term;
 use dialoguer::Select;
-use indicatif::ProgressBar;
+use indicatif::{MultiProgress, ProgressBar};
 use std::process::exit;
 
 pub fn show_query_result(db: &Database, query: &String) {
@@ -37,12 +38,17 @@ pub fn show(db: &Database, id: u64) {
         headline!("Nächste Aktion auswählen");
 
         if let Ok(Some(selection)) = Select::with_theme(&CustomTheme::default())
-            .items(&["Ende", "Prozeduren anzeigen"])
+            .items(&[
+                "Ende",
+                "Prozeduren anzeigen",
+                "Erkrankungen und Prozeduren löschen",
+            ])
             .default(0)
             .interact_on_opt(&term)
         {
             match selection {
                 1 => show_procedures(db, p.id),
+                2 => delete_disease_and_procedures(db, p.id),
                 _ => {
                     let _ = term.clear_last_lines(1);
                 }
@@ -59,8 +65,49 @@ pub fn show_procedures(db: &Database, id: u64) {
     let term = Term::stdout();
     let _ = term.clear_last_lines(1);
 
-    let forms = database::patient::procedures(db, id);
-    Page::with(&forms, 4).show("Prozeduren dieses Patienten");
+    let procedures = database::patient::procedures(db, id);
+    Page::with(&procedures, 4).show("Prozeduren dieses Patienten");
+}
+
+pub fn delete_disease_and_procedures(db: &Database, id: u64) {
+    let term = Term::stdout();
+    let _ = term.clear_last_lines(1);
+
+    let procedures = database::patient::procedures(db, id);
+    let diseases = database::disease::find_by_patient_id(db, id);
+
+    let multiprogress = MultiProgress::new();
+
+    headline!("Lösche Prozeduren");
+    if procedures.is_empty() {
+        warn!("Keine Einträge");
+    } else {
+        let procedure_bar = ProgressBar::new(procedures.len() as u64);
+        procedures.iter().for_each(|procedure| {
+            let removed = database::prozedur::delete(db, procedure.procedure_id);
+            if removed > 0 {
+                procedure_bar.inc(1);
+            };
+        });
+        procedure_bar.finish();
+        multiprogress.add(procedure_bar);
+    }
+
+    headline!("Lösche Erkrankungen");
+    if diseases.is_empty() {
+        warn!("Keine Einträge");
+    } else {
+        let disease_bar = ProgressBar::new(diseases.len() as u64);
+        diseases.iter().for_each(|disease| {
+            if delete(db, disease.id) {
+                disease_bar.inc(1)
+            }
+        });
+        disease_bar.finish();
+        multiprogress.add(disease_bar);
+    }
+
+    println!();
 }
 
 pub fn anonymize(db: &Database) {

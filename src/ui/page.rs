@@ -1,26 +1,28 @@
-use std::fmt::Display;
-use std::slice::Chunks;
+use crate::{blue_headline, green_headline, warn};
 use console::Term;
 use dialoguer::Confirm;
-use crate::{blue_headline, green_headline, warn};
+use std::fmt::Display;
+use std::slice::Chunks;
 
 pub struct Page<'a, T: Display> {
     current_page: usize,
-    chunks: Chunks<'a, T>
+    chunks: Chunks<'a, T>,
 }
 
-impl <'a, T> Page<'a, T> where T: Display {
-
+impl<'a, T> Page<'a, T>
+where
+    T: Display,
+{
     pub fn with(items: &[T], item_size: u16) -> Page<T> {
         let (rows, _) = &Term::stdout().size();
         Page {
             current_page: 0,
-            chunks: items.chunks((rows / item_size - 4) as usize)
+            chunks: items.chunks((rows / item_size - 4) as usize),
         }
     }
 
     pub fn show(mut self, headline: &str) {
-        let len =  self.chunks.len();
+        let len = self.chunks.len();
 
         if len == 0 {
             warn!("Keine Einträge");
@@ -44,12 +46,15 @@ impl <'a, T> Page<'a, T> where T: Display {
 
             blue_headline!(format!("Ende Seite {}", self.current_page));
 
-            if let Ok(false) = Confirm::new().with_prompt("Nächste Seite anzeigen?").default(true).interact() {
+            if let Ok(false) = Confirm::new()
+                .with_prompt("Nächste Seite anzeigen?")
+                .default(true)
+                .interact()
+            {
                 return;
             }
 
             let _ = &Term::stdout().clear_last_lines(2);
         }
     }
-
 }

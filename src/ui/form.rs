@@ -1,10 +1,10 @@
 use crate::database::Database;
+use crate::ui::page::Page;
 use crate::ui::{CustomTheme, EntitySelect};
 use crate::{database, green_headline, headline, warn};
 use console::{style, Term};
 use dialoguer::Select;
 use std::process::exit;
-use crate::ui::page::Page;
 
 pub fn show_query_result(db: &Database, query: &String) {
     let forms = database::form::query(db, query);

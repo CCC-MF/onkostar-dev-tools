@@ -1,11 +1,11 @@
 use crate::database::Database;
+use crate::ui::page::Page;
+use crate::ui::{CustomTheme, EntitySelect};
 use crate::{database, green_headline, headline, warn};
-use std::process::exit;
 use console::Term;
 use dialoguer::Select;
 use indicatif::ProgressBar;
-use crate::ui::{CustomTheme, EntitySelect};
-use crate::ui::page::Page;
+use std::process::exit;
 
 pub fn show_query_result(db: &Database, query: &String) {
     let ps = database::patient::query(db, query);
@@ -37,21 +37,30 @@ pub fn show(db: &Database, id: u64) {
         headline!("Nächste Aktion auswählen");
 
         if let Ok(Some(selection)) = Select::with_theme(&CustomTheme::default())
-            .items(&["Ende"])
+            .items(&["Ende", "Prozeduren anzeigen"])
             .default(0)
             .interact_on_opt(&term)
         {
             match selection {
+                1 => show_procedures(db, p.id),
                 _ => {
                     let _ = term.clear_last_lines(1);
                 }
             }
         }
-        return
+        return;
     }
 
     warn!("Nicht gefunden");
     println!();
+}
+
+pub fn show_procedures(db: &Database, id: u64) {
+    let term = Term::stdout();
+    let _ = term.clear_last_lines(1);
+
+    let forms = database::patient::procedures(db, id);
+    Page::with(&forms, 4).show("Prozeduren dieses Patienten");
 }
 
 pub fn anonymize(db: &Database) {

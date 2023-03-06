@@ -1,8 +1,8 @@
 use crate::database::Database;
-use mysql::{FromRowError, params, PooledConn, Row};
-use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
-use std::fmt::{Display, Formatter};
 use crate::ui::SelectDisplay;
+use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
+use mysql::{params, FromRowError, PooledConn, Row};
+use std::fmt::{Display, Formatter};
 
 #[derive(Debug)]
 pub struct PatientEntity {
@@ -13,8 +13,8 @@ pub struct PatientEntity {
 
 impl FromRow for PatientEntity {
     fn from_row_opt(row: Row) -> Result<Self, FromRowError>
-        where
-            Self: Sized,
+    where
+        Self: Sized,
     {
         if row.is_empty() {
             return Err(FromRowError(row));
@@ -92,9 +92,9 @@ pub fn get_by_id(db: &Database, id: u64) -> Option<PatientEntity> {
 }
 
 pub fn procedures(db: &Database, patient_id: u64) -> Vec<ProcedureForm> {
-    let sql = "SELECT procedure.id, data_form.id, data_form.name FROM procedure \
-        JOIN data_form ON procedure.data_form_id = data_form.id \
-        WHERE patient_id = :patient_id ORDER BY id";
+    let sql = "SELECT prozedur.id, data_form.id, data_form.name FROM prozedur \
+        JOIN data_form ON prozedur.data_form_id = data_form.id \
+        WHERE patient_id = :patient_id ORDER BY prozedur.id";
 
     if let Ok(result) = db.connection().exec_map(
         sql,

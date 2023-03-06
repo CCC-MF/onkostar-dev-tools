@@ -1,9 +1,8 @@
-use std::io;
 use clap::{CommandFactory, Parser};
-use dialoguer::Password;
-use indicatif::ProgressBar;
-use std::process::exit;
 use clap_complete::generate;
+use dialoguer::Password;
+use std::io;
+use std::process::exit;
 
 use crate::cli::{
     Cli, Commands, DkCommands, FormCommands, MkCommands, PatientCommands, UserCommands,
@@ -30,7 +29,7 @@ fn main() {
             "onkostar_dev_tools".to_string()
         };
         generate(shell, &mut Cli::command(), command_name, &mut io::stdout());
-        return
+        return;
     }
 
     let (db_username, db_password) = db_login(cli.username, cli.password);
@@ -45,7 +44,7 @@ fn main() {
     };
 
     match &cli.commands {
-        Commands::Completions { .. } => { /* Command handled before */ },
+        Commands::Completions { .. } => { /* Command handled before */ }
         Commands::Datenkatalog { command } | Commands::DK { command } => match command {
             DkCommands::Ls { query } => {
                 datenkatalog::show_query_result(db, query);
@@ -81,9 +80,7 @@ fn main() {
             }
         },
         Commands::Patient { command } => match command {
-            PatientCommands::Anonym => {
-                patient::anonymize(db)
-            },
+            PatientCommands::Anonym => patient::anonymize(db),
             PatientCommands::Ls { query } => {
                 patient::show_query_result(db, query);
             }

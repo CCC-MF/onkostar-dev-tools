@@ -36,9 +36,7 @@ pub struct Cli {
 #[derive(Clone, Subcommand)]
 pub enum Commands {
     #[command(hide = true)]
-    Completions {
-        shell: clap_complete::shells::Shell
-    },
+    Completions { shell: clap_complete::shells::Shell },
     #[command(about = "Befehle für Datenkataloge")]
     Datenkatalog {
         #[command(subcommand)]
@@ -154,7 +152,11 @@ pub enum PatientCommands {
     Anonym,
     #[command(about = "Zeigt eine Liste von gefilterten Patienten an")]
     Ls {
-        #[arg(short = 'q', long = "query", help = "Suchbegriff für Vor- und Nachname")]
+        #[arg(
+            short = 'q',
+            long = "query",
+            help = "Suchbegriff für Vor- und Nachname"
+        )]
         query: String,
     },
 }

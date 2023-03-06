@@ -1,10 +1,10 @@
 use crate::database::Database;
+use crate::ui::page::Page;
 use crate::ui::EntitySelect;
 use crate::{database, green_headline, headline, warn};
 use console::Term;
-use std::process::exit;
 use dialoguer::Confirm;
-use crate::ui::page::Page;
+use std::process::exit;
 
 pub fn show_query_result(db: &Database, query: &String) {
     let mks = database::merkmalskatalog::query(db, query);
@@ -42,7 +42,11 @@ pub fn show(db: &Database, id: u64) {
 pub fn show_versions_result(db: &Database, id: u64) {
     let term = Term::stdout();
 
-    if let Ok(true) = Confirm::new().with_prompt("Version auswählen und anzeigen?").default(false).interact() {
+    if let Ok(true) = Confirm::new()
+        .with_prompt("Version auswählen und anzeigen?")
+        .default(false)
+        .interact()
+    {
         let _ = term.clear_last_lines(1);
         let versions = database::merkmalskatalog::versions(db, id);
         headline!("Version auswählen");

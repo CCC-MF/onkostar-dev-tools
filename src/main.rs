@@ -2,17 +2,16 @@ extern crate core;
 
 use clap::{CommandFactory, Parser};
 use clap_complete::generate;
-use dialoguer::Password;
 use std::io;
 use std::process::exit;
 
-use crate::cli::{
-    Cli, Commands, DkCommands, FormCommands, MkCommands, PatientCommands, UserCommands,
-};
+use crate::cli::{Cli, Commands};
+use crate::commands::handle_command;
 use crate::database::Database;
 use crate::ui::*;
 
 mod cli;
+mod commands;
 mod database;
 mod ui;
 
@@ -45,68 +44,5 @@ fn main() {
         }
     };
 
-    match &cli.commands {
-        Commands::Completions { .. } => { /* Command handled before */ }
-        Commands::Datenkatalog { command } | Commands::DK { command } => match command {
-            DkCommands::Ls { query } => {
-                datenkatalog::show_query_result(db, query);
-            }
-            DkCommands::Show { id } => {
-                datenkatalog::show(db, *id);
-            }
-            DkCommands::Forms { id } => {
-                datenkatalog::show_forms(db, *id);
-            }
-            DkCommands::Clean { id } => datenkatalog::show_clean_dialogue(db, *id),
-        },
-        Commands::Form { command } => match command {
-            FormCommands::Ls { query } => {
-                form::show_query_result(db, query);
-            }
-            FormCommands::Show { id } => {
-                form::show(db, *id);
-            }
-            FormCommands::UF { id } => form::show_subforms(db, *id),
-            FormCommands::DK { id } => form::show_data_catalogues(db, *id),
-            FormCommands::Clean { id } => form::show_clean_dialogue(db, *id),
-        },
-        Commands::Merkmalskatalog { command } | Commands::MK { command } => match command {
-            MkCommands::Ls { query } => {
-                merkmalskatalog::show_query_result(db, query);
-            }
-            MkCommands::Show { id } => {
-                merkmalskatalog::show(db, *id);
-            }
-            MkCommands::Versions { id } => {
-                merkmalskatalog::show_versions_result(db, *id);
-            }
-        },
-        Commands::Patient { command } => match command {
-            PatientCommands::Anonym => patient::anonymize(db),
-            PatientCommands::Ls { query } => {
-                patient::show_query_result(db, query);
-            }
-        },
-        Commands::User { command } => match command {
-            UserCommands::Password {
-                login,
-                new_password,
-            } => match new_password {
-                Some(password) => database::user::update_password(db, login, password),
-                None => {
-                    green_headline!(match login {
-                        Some(login) => format!("Neues Passwort für Benutzer '{}' setzen", login),
-                        None => "Neues Passwort für alle Benutzer setzen".to_string(),
-                    });
-                    if let Ok(password) = Password::new()
-                        .with_prompt("Neues Passwort")
-                        .with_confirmation("Wiederholung", "Passwörter nicht identisch")
-                        .interact()
-                    {
-                        database::user::update_password(db, login, &password)
-                    }
-                }
-            },
-        },
-    }
+    handle_command(db, &cli.commands)
 }

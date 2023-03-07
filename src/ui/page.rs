@@ -34,8 +34,10 @@ where
             self.current_page += 1;
 
             green_headline!(headline);
-            blue_headline!(format!("Seite {} von {}", self.current_page, len));
-            println!();
+            if self.current_page < len {
+                blue_headline!(format!("Seite {} von {}", self.current_page, len));
+                println!();
+            }
             chunk.iter().for_each(|value| {
                 println!("{}", value);
             });

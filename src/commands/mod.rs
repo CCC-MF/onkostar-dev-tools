@@ -1,9 +1,7 @@
-use dialoguer::Password;
-
 use crate::cli::{Commands, DkCommands, FormCommands, MkCommands, PatientCommands, UserCommands};
 use crate::database::Database;
+use crate::ui::user::change_password;
 use crate::ui::*;
-use crate::{database, green_headline};
 
 pub fn handle_command(db: &Database, command: &Commands) {
     match command {
@@ -51,22 +49,7 @@ pub fn handle_command(db: &Database, command: &Commands) {
             UserCommands::Password {
                 login,
                 new_password,
-            } => match new_password {
-                Some(password) => database::user::update_password(db, login, password),
-                None => {
-                    green_headline!(match login {
-                        Some(login) => format!("Neues Passwort für Benutzer '{}' setzen", login),
-                        None => "Neues Passwort für alle Benutzer setzen".to_string(),
-                    });
-                    if let Ok(password) = Password::new()
-                        .with_prompt("Neues Passwort")
-                        .with_confirmation("Wiederholung", "Passwörter nicht identisch")
-                        .interact()
-                    {
-                        database::user::update_password(db, login, &password)
-                    }
-                }
-            },
+            } => change_password(db, login, new_password),
         },
         _ => { /* Do not handle command or command handled before */ }
     }

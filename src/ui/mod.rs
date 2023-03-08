@@ -8,6 +8,7 @@ pub mod form;
 pub mod merkmalskatalog;
 pub mod page;
 pub mod patient;
+pub mod user;
 
 pub struct CustomTheme;
 

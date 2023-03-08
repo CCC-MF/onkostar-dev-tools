@@ -40,15 +40,11 @@ pub fn show(db: &Database, id: u64) {
             .default(0)
             .interact_on_opt(&term)
         {
+            let _ = term.clear_last_lines(1);
             match selection {
                 1 => show_forms(db, dk.id),
-                2 => {
-                    let _ = term.clear_last_lines(1);
-                    show_clean_dialogue(db, dk.id)
-                }
-                _ => {
-                    let _ = term.clear_last_lines(1);
-                }
+                2 => show_clean_dialogue(db, dk.id),
+                _ => {}
             }
         }
         return;
@@ -59,9 +55,6 @@ pub fn show(db: &Database, id: u64) {
 }
 
 pub fn show_forms(db: &Database, id: u64) {
-    let term = Term::stdout();
-    let _ = term.clear_last_lines(1);
-
     let forms = database::datenkatalog::forms(db, id);
     Page::with(&forms, 4).show("Formulare mit diesem Datenkatalog");
 }

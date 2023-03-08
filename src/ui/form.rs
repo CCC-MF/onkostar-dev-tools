@@ -49,16 +49,12 @@ pub fn show(db: &Database, id: u64) {
             .default(0)
             .interact_on_opt(&term)
         {
+            let _ = term.clear_last_lines(1);
             match selection {
                 1 => show_data_catalogues(db, id),
-                2 => {
-                    let _ = term.clear_last_lines(1);
-                    show_clean_dialogue(db, id)
-                }
+                2 => show_clean_dialogue(db, id),
                 3 => show_subforms(db, id),
-                _ => {
-                    let _ = term.clear_last_lines(1);
-                }
+                _ => {}
             }
             return;
         }
@@ -69,17 +65,11 @@ pub fn show(db: &Database, id: u64) {
 }
 
 pub fn show_subforms(db: &Database, id: u64) {
-    let term = Term::stdout();
-    let _ = term.clear_last_lines(1);
-
     let forms = database::form::subforms(db, id);
     Page::with(&forms, 4).show("Unterformulare dieses Formulars");
 }
 
 pub fn show_data_catalogues(db: &Database, id: u64) {
-    let term = Term::stdout();
-    let _ = term.clear_last_lines(1);
-
     let dks = database::form::data_catalogues(db, id);
     Page::with(&dks, 4).show("Datenkataloge dieses Formulars");
 }

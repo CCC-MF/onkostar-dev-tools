@@ -9,7 +9,7 @@ use time::PrimitiveDateTime;
 pub struct ProcedureForm {
     pub procedure_id: u64,
     pub procedure_start: Option<PrimitiveDateTime>,
-    pub disease_id: u64,
+    pub disease_id: Option<u64>,
     pub data_form_id: u64,
     pub data_form_name: String,
 }
@@ -41,7 +41,10 @@ impl Display for ProcedureForm {
             f,
             "Prozedur-ID:  {}\nErkrankung:   {}\nBeginn:       {}\nFormularname: {}",
             self.procedure_id,
-            self.disease_id,
+            match self.disease_id {
+                Some(id) => id.to_string(),
+                _ => String::new()
+            },
             match self.procedure_start {
                 Some(start) => start.date().to_string(),
                 _ => String::new()
@@ -54,7 +57,7 @@ impl Display for ProcedureForm {
 pub fn procedures_by_patient_id(db: &Database, patient_id: u64) -> Vec<ProcedureForm> {
     let sql = "SELECT prozedur.id, prozedur.beginndatum, erkrankung_id, data_form.id, data_form.name FROM prozedur \
         JOIN data_form ON prozedur.data_form_id = data_form.id \
-        JOIN erkrankung_prozedur ON prozedur.id = erkrankung_prozedur.prozedur_id \
+        LEFT JOIN erkrankung_prozedur ON prozedur.id = erkrankung_prozedur.prozedur_id \
         WHERE prozedur.hauptprozedur_id IS NULL AND patient_id = :patient_id ORDER BY prozedur.beginndatum";
 
     if let Ok(result) = db.connection().exec_map(

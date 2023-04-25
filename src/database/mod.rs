@@ -30,7 +30,7 @@ impl Database {
                     MySqlError(e) => e.to_string(),
                     _ => "Keine weiteren Angaben".to_string(),
                 };
-                return Err(format!("Keine Datenbankverbindung möglich: {}", cause));
+                Err(format!("Keine Datenbankverbindung möglich: {}", cause))
             }
         }
     }

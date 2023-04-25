@@ -23,8 +23,6 @@ impl FromRow for ProcedureForm {
             return Err(FromRowError(row));
         }
 
-        println!(">> {:?}", row);
-
         Ok(ProcedureForm {
             procedure_id: row.get(0).unwrap(),
             procedure_start: row.get(1).unwrap(),

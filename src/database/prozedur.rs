@@ -8,7 +8,7 @@ use time::PrimitiveDateTime;
 #[derive(Debug)]
 pub struct ProcedureForm {
     pub procedure_id: u64,
-    pub procedure_start: PrimitiveDateTime,
+    pub procedure_start: Option<PrimitiveDateTime>,
     pub disease_id: u64,
     pub data_form_id: u64,
     pub data_form_name: String,
@@ -42,7 +42,10 @@ impl Display for ProcedureForm {
             "Prozedur-ID:  {}\nErkrankung:   {}\nBeginn:       {}\nFormularname: {}",
             self.procedure_id,
             self.disease_id,
-            self.procedure_start.date(),
+            match self.procedure_start {
+                Some(start) => start.date().to_string(),
+                _ => String::new()
+            },
             self.data_form_name
         )
     }

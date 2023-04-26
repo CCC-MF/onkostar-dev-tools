@@ -5,8 +5,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-clap = { version = "4.1", features = ["std", "help", "usage", "derive", "error-context" ], default-features = false }
-clap_complete = "4.1"
+clap = { version = "4.2", features = ["std", "help", "usage", "derive", "error-context" ], default-features = false }
+clap_complete = "4.2"
 dialoguer = "0.10"
 console = "0.15"
 indicatif = "0.17"
@@ -18,4 +18,5 @@ time = "0.3"
 opt-level = "s"
 codegen-units = 1
 lto = "thin"
-strip = "debuginfo"
+strip = true
+panic = "abort"

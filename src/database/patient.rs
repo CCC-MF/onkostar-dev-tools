@@ -8,11 +8,11 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Debug, DisplayHelper)]
 pub struct PatientEntity {
-    #[display(name = "ID")]
+    #[display("ID")]
     pub id: u64,
-    #[display(name = "Vorname")]
+    #[display("Vorname")]
     pub vorname: String,
-    #[display(name = "Nachname")]
+    #[display("Nachname")]
     pub nachname: String,
 }
 

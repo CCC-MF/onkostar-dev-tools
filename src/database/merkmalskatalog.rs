@@ -7,9 +7,9 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Debug, DisplayHelper)]
 pub struct MerkmalskatalogEntity {
-    #[display(name = "ID")]
+    #[display("ID")]
     pub id: u64,
-    #[display(name = "Name")]
+    #[display("Name")]
     pub name: String,
 }
 
@@ -37,9 +37,9 @@ impl SelectDisplay for MerkmalskatalogEntity {
 
 #[derive(Debug, DisplayHelper)]
 pub struct MerkmalskatalogVersionEntity {
-    #[display(name = "ID")]
+    #[display("ID")]
     pub id: u64,
-    #[display(name = "Beschreibung")]
+    #[display("Beschreibung")]
     pub version: u64,
     pub description: String,
 }
@@ -52,11 +52,11 @@ impl SelectDisplay for MerkmalskatalogVersionEntity {
 
 #[derive(Debug, DisplayHelper)]
 pub struct MerkmalskatalogCategoryEntity {
-    #[display(name = "ID")]
+    #[display("ID")]
     pub id: u64,
-    #[display(name = "Name")]
+    #[display("Name")]
     pub name: String,
-    #[display(name = "Beschreibung")]
+    #[display("Beschreibung")]
     pub beschreibung: String,
 }
 

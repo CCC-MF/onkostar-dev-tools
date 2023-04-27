@@ -8,11 +8,11 @@ use std::fmt::{Display, Formatter};
 
 #[derive(DisplayHelper)]
 pub struct FormEntity {
-    #[display(name = "ID")]
+    #[display("ID")]
     pub id: u64,
-    #[display(name = "Name")]
+    #[display("Name")]
     pub name: String,
-    #[display(name = "Beschreibung")]
+    #[display("Beschreibung")]
     pub description: String,
 }
 

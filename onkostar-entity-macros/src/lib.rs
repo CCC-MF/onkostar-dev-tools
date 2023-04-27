@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 
-use proc_macro2::TokenStream as TokenStream2;
+use proc_macro2::{Literal, TokenStream as TokenStream2};
 use quote::quote;
 use syn::{parse_macro_input, parse_str, DeriveInput, Field};
 
@@ -34,7 +34,7 @@ pub fn print_attr(input: TokenStream) -> TokenStream {
     let type_name = parse_str::<TokenStream2>(ast.ident.to_string().as_str()).unwrap();
     let field_params_ts = parse_str::<TokenStream2>(field_params.as_str()).unwrap();
 
-    let x = quote!(
+    let token_stream = quote!(
         impl Display for #type_name {
             fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
                 writeln!(f, #field_format, #field_params_ts)
@@ -42,7 +42,7 @@ pub fn print_attr(input: TokenStream) -> TokenStream {
         }
     );
 
-    TokenStream::from(x)
+    TokenStream::from(token_stream)
 }
 
 fn get_attr_name_values(field: &Field) -> Vec<(String, String)> {
@@ -52,18 +52,17 @@ fn get_attr_name_values(field: &Field) -> Vec<(String, String)> {
             .iter()
             .map(|attr| {
                 if attr.path().is_ident("display") {
-                    if let Ok(name_ts) = attr.parse_args::<TokenStream2>() {
-                        let n = format!("{}", name_ts);
-                        let regexp = regex::Regex::new("name\\s*=\\s*\"(?P<name>.*)\"").unwrap();
-                        let captures = regexp.captures(n.as_str()).expect("Captures");
-                        let name = &captures["name"];
-                        return (name.to_string() + ":", ident.to_string());
+                    if let Ok(name_ts) = attr.parse_args::<Literal>() {
+                        return (
+                            name_ts.to_string().replace('"', "") + ":",
+                            ident.to_string(),
+                        );
                     }
                 }
                 panic!("Missing field name")
             })
             .collect::<Vec<_>>()
     } else {
-        panic!("Missing field name")
+        panic!("No field ident")
     }
 }

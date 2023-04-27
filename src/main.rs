@@ -27,7 +27,7 @@ fn main() {
         let command_name = if let Some(command_name) = exe_name {
             command_name
         } else {
-            "onkostar_dev_tools".to_string()
+            "onkostar-dev-tools".to_string()
         };
         generate(shell, &mut Cli::command(), command_name, &mut io::stdout());
         return;

@@ -41,11 +41,11 @@ impl Display for ProcedureForm {
             self.procedure_id,
             match self.disease_id {
                 Some(id) => id.to_string(),
-                _ => String::new()
+                _ => String::new(),
             },
             match self.procedure_start {
                 Some(start) => start.date().to_string(),
-                _ => String::new()
+                _ => String::new(),
             },
             self.data_form_name
         )

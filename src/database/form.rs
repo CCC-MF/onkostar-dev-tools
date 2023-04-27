@@ -3,22 +3,17 @@ use crate::database::Database;
 use crate::ui::SelectDisplay;
 use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
 use mysql::{params, FromRowError, PooledConn, Row};
+use onkostar_entity_macros::DisplayHelper;
 use std::fmt::{Display, Formatter};
 
+#[derive(DisplayHelper)]
 pub struct FormEntity {
+    #[display(name = "ID")]
     pub id: u64,
+    #[display(name = "Name")]
     pub name: String,
+    #[display(name = "Beschreibung")]
     pub description: String,
-}
-
-impl Display for FormEntity {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(
-            f,
-            "ID:           {}\nName:         {}\nBeschreibung: {}",
-            self.id, self.name, self.description
-        )
-    }
 }
 
 impl FromRow for FormEntity {

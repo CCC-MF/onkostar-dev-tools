@@ -3,12 +3,16 @@ use crate::database::Database;
 use crate::ui::SelectDisplay;
 use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
 use mysql::{params, FromRowError, PooledConn, Row};
+use onkostar_entity_macros::DisplayHelper;
 use std::fmt::{Display, Formatter};
 
-#[derive(Debug)]
+#[derive(Debug, DisplayHelper)]
 pub struct PatientEntity {
+    #[display(name = "ID")]
     pub id: u64,
+    #[display(name = "Vorname")]
     pub vorname: String,
+    #[display(name = "Nachname")]
     pub nachname: String,
 }
 
@@ -26,16 +30,6 @@ impl FromRow for PatientEntity {
             vorname: row.get(1).unwrap(),
             nachname: row.get(2).unwrap(),
         })
-    }
-}
-
-impl Display for PatientEntity {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(
-            f,
-            "ID:           {}\nVorname:      {}\nNachname:     {}",
-            self.id, self.vorname, self.nachname
-        )
     }
 }
 

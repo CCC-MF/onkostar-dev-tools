@@ -2,11 +2,14 @@ use crate::database::Database;
 use crate::ui::SelectDisplay;
 use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
 use mysql::{params, FromRowError, PooledConn, Row};
+use onkostar_entity_macros::DisplayHelper;
 use std::fmt::{Display, Formatter};
 
-#[derive(Debug)]
+#[derive(Debug, DisplayHelper)]
 pub struct MerkmalskatalogEntity {
+    #[display(name = "ID")]
     pub id: u64,
+    #[display(name = "Name")]
     pub name: String,
 }
 
@@ -26,33 +29,19 @@ impl FromRow for MerkmalskatalogEntity {
     }
 }
 
-impl Display for MerkmalskatalogEntity {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "ID:           {}\nName:         {}", self.id, self.name)
-    }
-}
-
 impl SelectDisplay for MerkmalskatalogEntity {
     fn to_string(&self) -> String {
         format!("{}: {}", self.id, self.name)
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, DisplayHelper)]
 pub struct MerkmalskatalogVersionEntity {
+    #[display(name = "ID")]
     pub id: u64,
+    #[display(name = "Beschreibung")]
     pub version: u64,
     pub description: String,
-}
-
-impl Display for MerkmalskatalogVersionEntity {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(
-            f,
-            "ID:           {}\nBeschreibung: {}",
-            self.id, self.version
-        )
-    }
 }
 
 impl SelectDisplay for MerkmalskatalogVersionEntity {
@@ -61,21 +50,14 @@ impl SelectDisplay for MerkmalskatalogVersionEntity {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, DisplayHelper)]
 pub struct MerkmalskatalogCategoryEntity {
+    #[display(name = "ID")]
     pub id: u64,
+    #[display(name = "Name")]
     pub name: String,
+    #[display(name = "Beschreibung")]
     pub beschreibung: String,
-}
-
-impl Display for MerkmalskatalogCategoryEntity {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(
-            f,
-            "ID:           {}\nName:         {}\nBeschreibung: {}",
-            self.id, self.name, self.beschreibung
-        )
-    }
 }
 
 pub fn query(db: &Database, query: &String) -> Vec<MerkmalskatalogEntity> {

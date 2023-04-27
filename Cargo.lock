@@ -1026,8 +1026,19 @@ dependencies = [
  "dialoguer",
  "indicatif",
  "mysql",
+ "onkostar-entity-macros",
  "regex",
  "time",
+]
+
+[[package]]
+name = "onkostar-entity-macros"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "regex",
+ "syn 2.0.15",
 ]
 
 [[package]]

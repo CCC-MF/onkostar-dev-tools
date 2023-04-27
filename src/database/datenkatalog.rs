@@ -1,14 +1,21 @@
 use crate::database::form::{by_data_catalogue_id, FormEntity};
 use crate::database::Database;
 use crate::ui::SelectDisplay;
+
+use onkostar_entity_macros::DisplayHelper;
+
 use mysql::prelude::{BinQuery, FromRow, Queryable, TextQuery, WithParams};
 use mysql::{params, FromRowError, PooledConn, Row};
 use regex::Regex;
 use std::fmt::{Display, Formatter};
 
+#[derive(DisplayHelper)]
 pub struct DatenkatalogEntity {
+    #[display(name = "ID")]
     pub id: u64,
+    #[display(name = "Name")]
     pub name: String,
+    #[display(name = "Beschreibung")]
     pub description: String,
 }
 
@@ -26,16 +33,6 @@ impl FromRow for DatenkatalogEntity {
             name: row.get(1).unwrap(),
             description: row.get(2).unwrap(),
         })
-    }
-}
-
-impl Display for DatenkatalogEntity {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(
-            f,
-            "ID:           {}\nName:         {}\nBeschreibung: {}",
-            self.id, self.name, self.description
-        )
     }
 }
 

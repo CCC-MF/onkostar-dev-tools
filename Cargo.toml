@@ -4,6 +4,9 @@ description = "Tools zur Abfrage und Anpassung von Datenbankeinträgen in der On
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = ["onkostar-entity-macros"]
+
 [dependencies]
 clap = { version = "4.2", features = ["std", "help", "usage", "derive", "error-context" ], default-features = false }
 clap_complete = "4.2"
@@ -13,6 +16,8 @@ indicatif = "0.17"
 mysql = "*"
 regex = "1"
 time = "0.3"
+
+onkostar-entity-macros = { path = "onkostar-entity-macros" }
 
 [profile.release]
 opt-level = "s"

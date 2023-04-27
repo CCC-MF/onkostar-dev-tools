@@ -2,14 +2,15 @@ use crate::database::Database;
 use crate::ui::SelectDisplay;
 use mysql::prelude::{BinQuery, FromRow, Queryable, WithParams};
 use mysql::{params, FromRowError, PooledConn, Row};
-use onkostar_entity_macros::DisplayHelper;
+use onkostar_entity_macros::{DisplayHelper, SelectDisplayHelper};
 use std::fmt::{Display, Formatter};
 
-#[derive(Debug, DisplayHelper)]
+#[derive(Debug, DisplayHelper, SelectDisplayHelper)]
 pub struct MerkmalskatalogEntity {
     #[display("ID")]
     pub id: u64,
     #[display("Name")]
+    #[select_value]
     pub name: String,
 }
 
@@ -26,12 +27,6 @@ impl FromRow for MerkmalskatalogEntity {
             id: row.get(0).unwrap(),
             name: row.get(1).unwrap(),
         })
-    }
-}
-
-impl SelectDisplay for MerkmalskatalogEntity {
-    fn to_string(&self) -> String {
-        format!("{}: {}", self.id, self.name)
     }
 }
 

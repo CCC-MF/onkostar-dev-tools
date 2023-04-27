@@ -5,7 +5,7 @@ use quote::quote;
 use syn::{parse_macro_input, parse_str, DeriveInput, Field};
 
 #[proc_macro_derive(DisplayHelper, attributes(display))]
-pub fn print_attr(input: TokenStream) -> TokenStream {
+pub fn display_helper(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
 
     let struct_: syn::DataStruct = match ast.data {
@@ -18,6 +18,10 @@ pub fn print_attr(input: TokenStream) -> TokenStream {
         .iter()
         .flat_map(get_attr_name_values)
         .collect::<Vec<_>>();
+
+    if fields.is_empty() {
+        panic!("No fields to display, add #[display()] to some fields")
+    }
 
     let field_format = fields
         .iter()
@@ -45,6 +49,56 @@ pub fn print_attr(input: TokenStream) -> TokenStream {
     TokenStream::from(token_stream)
 }
 
+#[proc_macro_derive(SelectDisplayHelper, attributes(select_value))]
+pub fn select_display_helper(input: TokenStream) -> TokenStream {
+    let ast = parse_macro_input!(input as DeriveInput);
+
+    let struct_: syn::DataStruct = match ast.data {
+        syn::Data::Struct(data) => data,
+        _ => panic!("Usage of #[SelectDisplayHelper] on a non-struct type"),
+    };
+
+    let field_names = struct_
+        .fields
+        .iter()
+        .flat_map(|field| {
+            field
+                .attrs
+                .iter()
+                .map(|attr| {
+                    if attr.path().is_ident("select_value") {
+                        return match &field.ident {
+                            None => String::new(),
+                            Some(ident) => ident.to_string(),
+                        };
+                    }
+                    String::new()
+                })
+                .filter(|name| !name.is_empty())
+                .collect::<Vec<_>>()
+        })
+        .collect::<Vec<_>>();
+
+    if field_names.is_empty() {
+        panic!("No #[select_value]")
+    } else if field_names.len() > 1 {
+        panic!("Multiple #[select_value]")
+    }
+
+    let type_name = parse_str::<TokenStream2>(ast.ident.to_string().as_str()).unwrap();
+    let name = parse_str::<TokenStream2>(field_names.last().unwrap().as_str()).unwrap();
+
+    let token_stream = quote!(
+        impl SelectDisplay for #type_name {
+            fn to_string(&self) -> String {
+                format!("{}: {}", self.id, self.#name)
+            }
+        }
+    );
+
+    TokenStream::from(token_stream)
+}
+
 fn get_attr_name_values(field: &Field) -> Vec<(String, String)> {
     if let Some(ident) = &field.ident {
         field
@@ -59,8 +113,9 @@ fn get_attr_name_values(field: &Field) -> Vec<(String, String)> {
                         );
                     }
                 }
-                panic!("Missing field name")
+                (String::new(), String::new())
             })
+            .filter(|(name, ident)| !name.is_empty() && !ident.is_empty())
             .collect::<Vec<_>>()
     } else {
         panic!("No field ident")

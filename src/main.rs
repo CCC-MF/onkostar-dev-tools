@@ -5,12 +5,11 @@ use clap_complete::generate;
 use std::io;
 use std::process::exit;
 
-use crate::cli::{Cli, Commands};
+use crate::commands::cli::{Cli, Commands};
 use crate::commands::handle_command;
 use crate::database::Database;
 use crate::ui::*;
 
-mod cli;
 mod commands;
 mod database;
 mod ui;

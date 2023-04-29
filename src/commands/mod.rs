@@ -1,7 +1,11 @@
-use crate::cli::{Commands, DkCommands, FormCommands, MkCommands, PatientCommands, UserCommands};
+use crate::commands::cli::{
+    Commands, DkCommands, FormCommands, MkCommands, PatientCommands, UserCommands,
+};
 use crate::database::Database;
 use crate::ui::user::change_password;
 use crate::ui::*;
+
+pub mod cli;
 
 pub fn handle_command(db: &Database, command: &Commands) {
     match command {
